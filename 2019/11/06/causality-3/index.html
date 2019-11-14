@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="ustclhx&#39;s blog">
 <meta property="og:description" content="简介在前一章中我们解决了怎样从原始数据中学习发现因果关系的问题，而很多领域中，人类已经有多年的研究历史，可以给出可靠的先验知识。我们接下来就将探索，在有数据和定性的因果假设相结合的情况下，如何推断出这些因果关系。 因果推理的知识允许我们去预测在一个假设的介入下，系统会做出怎样的反应。本章中将用因果图的形式，对介入给出一个形式化的语义概念。我们将看到，只要数据可以假设被一个无环的、没有隐变量的因果图">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-11-14T08:24:43.505Z">
+<meta property="og:updated_time" content="2019-11-14T08:27:54.974Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《causality》读书笔记 Ⅲ：使用因果图识别因果效应">
 <meta name="twitter:description" content="简介在前一章中我们解决了怎样从原始数据中学习发现因果关系的问题，而很多领域中，人类已经有多年的研究历史，可以给出可靠的先验知识。我们接下来就将探索，在有数据和定性的因果假设相结合的情况下，如何推断出这些因果关系。 因果推理的知识允许我们去预测在一个假设的介入下，系统会做出怎样的反应。本章中将用因果图的形式，对介入给出一个形式化的语义概念。我们将看到，只要数据可以假设被一个无环的、没有隐变量的因果图">
@@ -392,7 +392,7 @@
 <p>我们可以让$F_i$做为$X_i$的一个双亲结点加入图结构，我们可以通过调节$F_i$的取值(令它等于一个常数函数)，表达我们的介入。这样表达的另一个优点是可以方便地处理模型中函数关系的变化，而不仅仅是表达介入。</p>
 <h3 id="介入的计算"><a href="#介入的计算" class="headerlink" title="介入的计算"></a>介入的计算</h3><p>有了在因果模型中形式化地表达介入的方法后，我们接下来就应该要考虑如何计算介入对其他变量分布的影响。</p>
 <p>首先考虑介入后的分解公式，由介入的定义不难发现下式，</p>
-<p>$$P(x_1,x_2,…,x_n|do(x’<em>i))=\left{\begin{matrix}<br>\prod</em>{j\not=i}P(x_j|pa_j),&amp;if\ x_i=x_i’\<br>0,&amp;if\ x_i \not = x_i’<br>\end{matrix}\right.$$</p>
+<p>$$P(x_1,x_2,…,x_n|do(x’<em>i))= \left{\begin{matrix}<br>\prod</em>{j\not=i}P(x_j|pa_j),&amp;if\ x_i=x_i’\\<br>0,&amp;if\ x_i \not = x_i’<br>\end{matrix}\right.<br>$$</p>
 
       
     </div>
