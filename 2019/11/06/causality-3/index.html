@@ -79,15 +79,18 @@
 
 
 
+<meta name="description" content="简介在前一章中我们解决了怎样从原始数据中学习发现因果关系的问题，而很多领域中，人类已经有多年的研究历史，可以给出可靠的先验知识。我们接下来就将探索，在有数据和定性的因果假设相结合的情况下，如何推断出这些因果关系。 因果推理的知识允许我们去预测在一个假设的介入下，系统会做出怎样的反应。本章中将用因果图的形式，对介入给出一个形式化的语义概念。我们将看到，只要数据可以假设被一个无环的、没有隐变量的因果图">
 <meta name="keywords" content="因果推理,AI,《causality》">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《causality》读书笔记 Ⅲ：因果效应的识别">
+<meta property="og:title" content="《causality》读书笔记 Ⅲ：使用因果图识别因果效应">
 <meta property="og:url" content="http://yoursite.com/2019/11/06/causality-3/index.html">
 <meta property="og:site_name" content="ustclhx&#39;s blog">
+<meta property="og:description" content="简介在前一章中我们解决了怎样从原始数据中学习发现因果关系的问题，而很多领域中，人类已经有多年的研究历史，可以给出可靠的先验知识。我们接下来就将探索，在有数据和定性的因果假设相结合的情况下，如何推断出这些因果关系。 因果推理的知识允许我们去预测在一个假设的介入下，系统会做出怎样的反应。本章中将用因果图的形式，对介入给出一个形式化的语义概念。我们将看到，只要数据可以假设被一个无环的、没有隐变量的因果图">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-11-06T13:18:14.492Z">
+<meta property="og:updated_time" content="2019-11-14T08:24:43.505Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《causality》读书笔记 Ⅲ：因果效应的识别">
+<meta name="twitter:title" content="《causality》读书笔记 Ⅲ：使用因果图识别因果效应">
+<meta name="twitter:description" content="简介在前一章中我们解决了怎样从原始数据中学习发现因果关系的问题，而很多领域中，人类已经有多年的研究历史，可以给出可靠的先验知识。我们接下来就将探索，在有数据和定性的因果假设相结合的情况下，如何推断出这些因果关系。 因果推理的知识允许我们去预测在一个假设的介入下，系统会做出怎样的反应。本章中将用因果图的形式，对介入给出一个形式化的语义概念。我们将看到，只要数据可以假设被一个无环的、没有隐变量的因果图">
 
 
 
@@ -123,7 +126,7 @@
 
 
 
-  <title>《causality》读书笔记 Ⅲ：因果效应的识别 | ustclhx's blog</title>
+  <title>《causality》读书笔记 Ⅲ：使用因果图识别因果效应 | ustclhx's blog</title>
   
 
 
@@ -277,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">《causality》读书笔记 Ⅲ：因果效应的识别</h1>
+          <h1 class="post-title" itemprop="name headline">《causality》读书笔记 Ⅲ：使用因果图识别因果效应</h1>
         
 
         <div class="post-meta">
@@ -370,7 +373,27 @@
       
 
       
-        
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>在前一章中我们解决了怎样从原始数据中学习发现因果关系的问题，而很多领域中，人类已经有多年的研究历史，可以给出可靠的先验知识。我们接下来就将探索，在有数据和定性的因果假设相结合的情况下，如何推断出这些因果关系。</p>
+<p>因果推理的知识允许我们去预测在一个假设的介入下，系统会做出怎样的反应。本章中将用因果图的形式，对介入给出一个形式化的语义概念。我们将看到，只要数据可以假设被一个无环的、没有隐变量的因果图所生成，那么我们就可以从非实验的数据中估计每一个介入带来的影响。</p>
+<p>如果某些变量无法被测量，我们就会面临一个可识别性的问题。我们可以看到因果图为可识别性的分析提供了一个强大的数学工具，此外，我们将一系列推理规则命名为do-calculus,它可以用通过观察就可以得到的变量计算每一个用介入表达的变量。</p>
+<p>本章将要介绍的算法可以帮助处理以下任务：</p>
+<p>1.说明模型背后的假设。</p>
+<p>2.判断给定的假设是否足够去获得目标量的一个一致估计。</p>
+<p>3.如果2的结果是肯定的，那将目标量表示为一个可观测量的封闭表达式。</p>
+<p>4.如果2的结果是否定的，那么给出一系列可选的观测和实验，使得目标量可估计。</p>
+<h2 id="马尔科夫模型中的介入"><a href="#马尔科夫模型中的介入" class="headerlink" title="马尔科夫模型中的介入"></a>马尔科夫模型中的介入</h2><h3 id="介入的表达"><a href="#介入的表达" class="headerlink" title="介入的表达"></a>介入的表达</h3><p>在第一章中，我们介绍了因果模型的概念，与概率模型不同，它可以帮助我们去预测介入的影响。Pearl 主张用一个有向无环图(DAG)表示我们感兴趣的变量之间的因果关系，并且这种因果关系是函数式，而不是概率式的，有如下表达</p>
+<p>$$x_i = f_i(pa_i,\epsilon_i) $$</p>
+<p>其中，$pa_i$代表$x_i$的双亲结点，$\epsilon_i$代表联合独立、任意分布的随机扰动。这些扰动项代表着研究者们选择被排除于分析之外的彼此独立的变量，它们至多只能影响图中的一个变量，否则必须要做为隐变量加入分析。</p>
+<p>更一般地，我们可以用集合U代表所有未被观测到的因素(包括$\epsilon_i$),并用一个联合分布P(u)代表它们的概率分布。只要我们有了函数关系$f_i$和联合概率分布P(u)，就可以完整刻画出因果模型。如果因果图G(M)是无环的，那么M被成为是semi-Markovian,此外，如果未观测变量还是彼此独立的，那么M是Markovian的。</p>
+<p>我们接下来要探讨的问题就是如何在一个Markovian的模型中处理介入问题。一个介入可以表达成对函数关系的一个子集的修改，同时保持其他函数关系不变。最简单的例子是只对单个变量进行的外部介入，比如强迫$X_i$取某个定值$x_i$,我们就要在模型中去除函数$x_i=f_i(pa_i,u_i)$,并用$X_i=x_i$替代，我们称这种介入是”原子”的，并用符号$do(X_i=x_i)$或者$do(x_i)$表示。</p>
+<p>另一种表达是将介入或者函数关系当作一个变量加入因果模型，</p>
+<p>$$x_i=I(pa_i,f_i,u_i)$$</p>
+<p>其中，$I(a,b,c)=f_i(a,c),whenever\ b = f_i$</p>
+<p>我们可以让$F_i$做为$X_i$的一个双亲结点加入图结构，我们可以通过调节$F_i$的取值(令它等于一个常数函数)，表达我们的介入。这样表达的另一个优点是可以方便地处理模型中函数关系的变化，而不仅仅是表达介入。</p>
+<h3 id="介入的计算"><a href="#介入的计算" class="headerlink" title="介入的计算"></a>介入的计算</h3><p>有了在因果模型中形式化地表达介入的方法后，我们接下来就应该要考虑如何计算介入对其他变量分布的影响。</p>
+<p>首先考虑介入后的分解公式，由介入的定义不难发现下式，</p>
+<p>$$P(x_1,x_2,…,x_n|do(x’<em>i))=\left{\begin{matrix}<br>\prod</em>{j\not=i}P(x_j|pa_j),&amp;if\ x_i=x_i’\<br>0,&amp;if\ x_i \not = x_i’<br>\end{matrix}\right.$$</p>
+
       
     </div>
     
@@ -496,8 +519,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -559,6 +591,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#马尔科夫模型中的介入"><span class="nav-number">2.</span> <span class="nav-text">马尔科夫模型中的介入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的表达"><span class="nav-number">2.1.</span> <span class="nav-text">介入的表达</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的计算"><span class="nav-number">2.2.</span> <span class="nav-text">介入的计算</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
