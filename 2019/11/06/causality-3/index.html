@@ -89,7 +89,8 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/1.png">
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/2.png">
-<meta property="og:updated_time" content="2019-11-14T08:37:29.955Z">
+<meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/3.png">
+<meta property="og:updated_time" content="2019-11-15T03:08:16.277Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《causality》读书笔记 Ⅲ：使用因果图识别因果效应">
 <meta name="twitter:description" content="简介在前一章中我们解决了怎样从原始数据中学习发现因果关系的问题，而很多领域中，人类已经有多年的研究历史，可以给出可靠的先验知识。我们接下来就将探索，在有数据和定性的因果假设相结合的情况下，如何推断出这些因果关系。 因果推理的知识允许我们去预测在一个假设的介入下，系统会做出怎样的反应。本章中将用因果图的形式，对介入给出一个形式化的语义概念。我们将看到，只要数据可以假设被一个无环的、没有隐变量的因果图">
@@ -398,6 +399,22 @@
 <p><img src="1.png" alt="1"></p>
 <p>上下同乘$P(x_i’|pa_i)$,可以化简为更简洁的形式，</p>
 <p><img src="2.png" alt="2"></p>
+<p>进一步对$P(x’_i|pa_i)$进行分解，可以得到下式，</p>
+<p><img src="3.png" alt="3"></p>
+<p>借助上式，我们可以估计$do(x_i)$对任意与$X_i \bigcup PA_i$不相交的变量集Y的因果影响，只要让上式对所有除$Y \bigcup X_i$外的变量求和即可。这样便可以得到一个求解直接影响的定理。</p>
+<blockquote>
+<p><strong>定理：Adjustment for Direct Causes</strong><br>$PA_i$代表变量$X_i$的直接原因，Y是任意与${X_i\bigcup PA_i}$不相交的变量集合，那么介入do$(X_i=x’<em>i)$对Y的影响等于下式：<br>$$P(y|do(x’_i))=\sum</em>{pa_i}P(y|x_i,pa_i)P(pa_i)$$<br>其中，$P(y|x_i,pa_i)$和$P(pa_i)$代表介入前的概率分布。</p>
+</blockquote>
+<p>上式通过调节$X_i$的双亲结点$PA_i$，并根据$PA_i=pa_i$的概率计算加权平均，最终得到对Y的影响，注意到通过这种方式，我们所需要的信息可以只是可以直接观测到的干预前的信息。</p>
+<p>我们可选择的介入方式还可以进一步拓展，我们可以对一组变量集合$S$而不是单个变量进行修改，也可以不局限于用定值而用新的函数关系代替。</p>
+<h3 id="介入的可识别性"><a href="#介入的可识别性" class="headerlink" title="介入的可识别性"></a>介入的可识别性</h3><p>往往我们得到的非实验数据只能告诉我们变量的概率分布，而一个相同的概率分布可能可以兼容多个不同的因果模型，因此我们希望找到那些我们不用知道模型的全部细节信息就可以判断的因果量，这些因果量要在所有可能符合给定概率分布的模型中都相等，我们称这些因果量是可识别的。</p>
+<blockquote>
+<p><strong>定义：因果影响的可识别性</strong><br>对一个给定的因果图G和G中变量的一个任意的概率分布P，X和Y是G中的两个不相交变量集，当下述情况可以满足时，我们称X对Y的因果影响是可识别的：<br>对每一对满足$G(M_1)=G(M_2)=G$和$P_{M_1}(v)=P_{M_2}(v)&gt;0$的模型$M_1$和$M_2$,都有$P_{M_1}(y|do(x))=P_{M_2}{y|do(x)}$。</p>
+</blockquote>
+<p>如果P(y|do(x))是可识别的，那我们可以保证X对Y的因果影响可以从下面两个来源的信息中得到：</p>
+<p>(1).被动观测得到的概率函数P(v)</p>
+<p>(2).因果图G,指出了哪些变量是决定某一个变量的直接原因。</p>
+<h2 id="控制干扰因子"><a href="#控制干扰因子" class="headerlink" title="控制干扰因子"></a>控制干扰因子</h2><p>当我们想要去计算X对Y的因果影响时，我们首先要解决要控制哪些其他的变量因素(Z)的问题，这些变量被称为”covariates”(协变量)、”concomitants”(伴随变量)或者”confounders”(干扰因子)。关于Z的调节意味着将数据分成相对于Z的不同子集，每个子集中数据在Z中变量上的取值相等，然后在不同子集上分别计算X对Y的影响，最后再计算平均结果。</p>
 
       
     </div>
@@ -606,7 +623,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#马尔科夫模型中的介入"><span class="nav-number">2.</span> <span class="nav-text">马尔科夫模型中的介入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的表达"><span class="nav-number">2.1.</span> <span class="nav-text">介入的表达</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的计算"><span class="nav-number">2.2.</span> <span class="nav-text">介入的计算</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#马尔科夫模型中的介入"><span class="nav-number">2.</span> <span class="nav-text">马尔科夫模型中的介入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的表达"><span class="nav-number">2.1.</span> <span class="nav-text">介入的表达</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的计算"><span class="nav-number">2.2.</span> <span class="nav-text">介入的计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的可识别性"><span class="nav-number">2.3.</span> <span class="nav-text">介入的可识别性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#控制干扰因子"><span class="nav-number">3.</span> <span class="nav-text">控制干扰因子</span></a></li></ol></div>
             
 
           </div>
