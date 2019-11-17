@@ -90,7 +90,7 @@
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/1.png">
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/2.png">
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/3.png">
-<meta property="og:updated_time" content="2019-11-17T07:52:09.951Z">
+<meta property="og:updated_time" content="2019-11-17T08:35:48.277Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《causality》读书笔记 Ⅲ：使用因果图识别因果效应">
 <meta name="twitter:description" content="简介在前一章中我们解决了怎样从原始数据中学习发现因果关系的问题，而很多领域中，人类已经有多年的研究历史，可以给出可靠的先验知识。我们接下来就将探索，在有数据和定性的因果假设相结合的情况下，如何推断出这些因果关系。 因果推理的知识允许我们去预测在一个假设的介入下，系统会做出怎样的反应。本章中将用因果图的形式，对介入给出一个形式化的语义概念。我们将看到，只要数据可以假设被一个无环的、没有隐变量的因果图">
@@ -417,6 +417,9 @@
 <h2 id="控制干扰因子"><a href="#控制干扰因子" class="headerlink" title="控制干扰因子"></a>控制干扰因子</h2><p>当我们想要去计算X对Y的因果影响时，我们首先要解决要控制哪些其他的变量因素(Z)的问题，这些变量被称为”covariates”(协变量)、”concomitants”(伴随变量)或者”confounders”(干扰因子)。关于Z的调节意味着将数据分成相对于Z的不同子集，每个子集中数据在Z中变量上的取值相等，然后在不同子集上分别计算X对Y的影响，最后再计算平均结果。</p>
 <p>这种对变量的调节方法，早在1899年，kearl Pearson发现Simpson悖论(第六章中会详细说明)时就被一起提出。但在实际情况中选取哪些变量是合适的，长久以来一直缺乏一个明确的标准，Pearl为此分别提出了Back-door Criterion 和 Front-door Criterion,在本节中我们将对这个问题进行介绍。</p>
 <h3 id="Back-door-Criterion"><a href="#Back-door-Criterion" class="headerlink" title="Back-door Criterion"></a>Back-door Criterion</h3><p>我们将展示存在一个被Pearl成为”Back-door Criterion”简单的图形化的测试,它可以直接被用于因果图中，能够判断在给定一组变量集$Z \subseteq V$的情况下，P(y|do(x))是否可以被识别。</p>
+<blockquote>
+<p><strong>定义： Back-door 准则</strong></p>
+</blockquote>
 
       
     </div>
