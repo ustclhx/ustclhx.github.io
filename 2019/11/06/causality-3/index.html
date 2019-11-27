@@ -90,7 +90,7 @@
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/1.png">
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/2.png">
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/3.png">
-<meta property="og:updated_time" content="2019-11-17T08:41:59.940Z">
+<meta property="og:updated_time" content="2019-11-27T02:33:04.716Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《causality》读书笔记 Ⅲ：使用因果图识别因果效应">
 <meta name="twitter:description" content="简介在前一章中我们解决了怎样从原始数据中学习发现因果关系的问题，而很多领域中，人类已经有多年的研究历史，可以给出可靠的先验知识。我们接下来就将探索，在有数据和定性的因果假设相结合的情况下，如何推断出这些因果关系。 因果推理的知识允许我们去预测在一个假设的介入下，系统会做出怎样的反应。本章中将用因果图的形式，对介入给出一个形式化的语义概念。我们将看到，只要数据可以假设被一个无环的、没有隐变量的因果图">
@@ -418,8 +418,21 @@
 <p>这种对变量的调节方法，早在1899年，kearl Pearson发现Simpson悖论(第六章中会详细说明)时就被一起提出。但在实际情况中选取哪些变量是合适的，长久以来一直缺乏一个明确的标准，Pearl为此分别提出了Back-door Criterion 和 Front-door Criterion,在本节中我们将对这个问题进行介绍。</p>
 <h3 id="Back-door-Criterion"><a href="#Back-door-Criterion" class="headerlink" title="Back-door Criterion"></a>Back-door Criterion</h3><p>我们将展示存在一个被Pearl成为”Back-door Criterion”简单的图形化的测试,它可以直接被用于因果图中，能够判断在给定一组变量集$Z \subseteq V$的情况下，P(y|do(x))是否可以被识别。</p>
 <blockquote>
-<p><strong>定义： Back-door 准则</strong><br>一组变量集Z</p>
+<p><strong>定义： Back-door 准则</strong><br>在一个DAG G中，一组变量集Z相对于另一对有序变量对$(X_i,X_j)$满足back-door准则需要符合以下条件：<br><strong>1.</strong>Z中没有结点是$X_i$的后代，并且<br><strong>2.</strong>Z封锁了所有$X_i$和$X_j$的back-door path,即，有一个箭头指向$X_i$的连接$X_i$和$X_j$的路径(无视方向的路径)。  </p>
 </blockquote>
+<p>类似得，如果X和Y是变量的集合,那么称Z满足关于X和Y的back-door 准则,当且近当对每一对变量$(X_i,Y_j).X_i\in X,Y_j \in Y$,Z关于它们都满足back-door 准则。</p>
+<p>命名为back-door的原因很好理解，我们只需要去封锁住那些箭头指向$X_i$的路径，这些路径没有传递真正的因果而是向最后的统计量中增加了虚假的关联性，因此我们形象地称这些路径为back-door。</p>
+<blockquote>
+<p><strong>定理：Back-Door Adjustment</strong><br>如果一组变量Z满足相关于(X,Y)的back-door 准则，那么X对Y的因果影响就是可识别的，并且可以由下式给出：<br>$$P(y|do(x))=\sum_z P(y|x,z)P(z)$$  </p>
+</blockquote>
+<p>得到back-door adjustment的逻辑是简单且直接的，为了消除虚假的关联性，我们需要满足以下三个条件：</p>
+<blockquote>
+<p>1.封锁住所有从X到Y的虚假路径。<br>2.所有X到Y的直接路径不会被干扰。<br>3.不会增加新的虚假路径。</p>
+</blockquote>
+<p>我们需要阻断每一条backdoor criterion ，他们会导致X和Y互相依赖，但没有传递因果影响；但我们不能控制任何X的后代，因为后代可能会向Y传递直接的影响；最后，我们应该尽量不在backdoor 中控制一个collider,这样会打开一条backdoor,如果不得不这样做，那么必须在新增加的backdoor中控制其他非collider的变量。</p>
+<p>严格地数学证明参考《causality》3.3.1</p>
+<h3 id="Front-door-Criterion"><a href="#Front-door-Criterion" class="headerlink" title="Front-door Criterion"></a>Front-door Criterion</h3><p>back-door 准则只是可识别性的一个充分不必要条件，并不能覆盖所有识别因果的方法。在一些back-door不能判断的情况中，我们仍可以发现识别因果影响的方法。</p>
+<p><a href="4.png">4</a></p>
 
       
     </div>
@@ -628,7 +641,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#马尔科夫模型中的介入"><span class="nav-number">2.</span> <span class="nav-text">马尔科夫模型中的介入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的表达"><span class="nav-number">2.1.</span> <span class="nav-text">介入的表达</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的计算"><span class="nav-number">2.2.</span> <span class="nav-text">介入的计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的可识别性"><span class="nav-number">2.3.</span> <span class="nav-text">介入的可识别性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#控制干扰因子"><span class="nav-number">3.</span> <span class="nav-text">控制干扰因子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Back-door-Criterion"><span class="nav-number">3.1.</span> <span class="nav-text">Back-door Criterion</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#马尔科夫模型中的介入"><span class="nav-number">2.</span> <span class="nav-text">马尔科夫模型中的介入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的表达"><span class="nav-number">2.1.</span> <span class="nav-text">介入的表达</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的计算"><span class="nav-number">2.2.</span> <span class="nav-text">介入的计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的可识别性"><span class="nav-number">2.3.</span> <span class="nav-text">介入的可识别性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#控制干扰因子"><span class="nav-number">3.</span> <span class="nav-text">控制干扰因子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Back-door-Criterion"><span class="nav-number">3.1.</span> <span class="nav-text">Back-door Criterion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Front-door-Criterion"><span class="nav-number">3.2.</span> <span class="nav-text">Front-door Criterion</span></a></li></ol></li></ol></div>
             
 
           </div>
