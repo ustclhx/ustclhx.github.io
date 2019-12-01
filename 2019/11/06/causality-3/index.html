@@ -90,7 +90,8 @@
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/1.png">
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/2.png">
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/3.png">
-<meta property="og:updated_time" content="2019-11-27T02:33:04.716Z">
+<meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/4.png">
+<meta property="og:updated_time" content="2019-12-01T11:41:57.637Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《causality》读书笔记 Ⅲ：使用因果图识别因果效应">
 <meta name="twitter:description" content="简介在前一章中我们解决了怎样从原始数据中学习发现因果关系的问题，而很多领域中，人类已经有多年的研究历史，可以给出可靠的先验知识。我们接下来就将探索，在有数据和定性的因果假设相结合的情况下，如何推断出这些因果关系。 因果推理的知识允许我们去预测在一个假设的介入下，系统会做出怎样的反应。本章中将用因果图的形式，对介入给出一个形式化的语义概念。我们将看到，只要数据可以假设被一个无环的、没有隐变量的因果图">
@@ -430,10 +431,48 @@
 <p>1.封锁住所有从X到Y的虚假路径。<br>2.所有X到Y的直接路径不会被干扰。<br>3.不会增加新的虚假路径。</p>
 </blockquote>
 <p>我们需要阻断每一条backdoor criterion ，他们会导致X和Y互相依赖，但没有传递因果影响；但我们不能控制任何X的后代，因为后代可能会向Y传递直接的影响；最后，我们应该尽量不在backdoor 中控制一个collider,这样会打开一条backdoor,如果不得不这样做，那么必须在新增加的backdoor中控制其他非collider的变量。</p>
-<p>严格地数学证明参考《causality》3.3.1</p>
+<p>严格的数学证明参考《causality》3.3.1</p>
 <h3 id="Front-door-Criterion"><a href="#Front-door-Criterion" class="headerlink" title="Front-door Criterion"></a>Front-door Criterion</h3><p>back-door 准则只是可识别性的一个充分不必要条件，并不能覆盖所有识别因果的方法。在一些back-door不能判断的情况中，我们仍可以发现识别因果影响的方法。</p>
-<p><a href="4.png">4</a></p>
-
+<p><img src="4.png" alt="4"></p>
+<p>如上图所示，在图(a)中，由于有不可观测的变量U,X -&gt; Y的一条back-door没有办法被封锁，因此通过back-door 准则得到X -&gt; Y的因果影响。</p>
+<p>在图(b)中，我们在X和Y之间多了一个可观测的中间变量Z，此时我们仍然无法用back-door的方法解决，但我们可以使用Z打开一条新的通路。与back-door相对，我们称这条路径为front-door。</p>
+<p>考虑经过介入do(x)后，图(b)中的联合分布为：</p>
+<p>$$P(y,z,u|do(x))=p(y|z,u)P(z|x)P(u)$$</p>
+<p>关于z和u求和，可以得到：</p>
+<p>$$P(y|do(x)) = \sum_z P(z|x) \sum_u P(y|z,u)P(u)\tag{*}$$</p>
+<p>等式左侧的P(y|do(x))即为我们的最终目标，由于u是不可观测的变量集，我们接下来想要寻找一个没有u出现的等价形式。注意到u只出现了在$\sum_u P(y|z,u)P(u)$中。</p>
+<p>根据(b)中的图结构，我们可以得到下面的两个条件独立假设：</p>
+<p>$$P(u|z,x)=P(u|x)$$<br>$$P(y|x,z,u)=P(y|z,u)$$</p>
+<p>由此，可以得到：</p>
+<p>$$<br>\begin{aligned}<br>P(y|z,u)P(u)&amp;=\sum_x \sum_u P(y|z,u)P(u|x)P(x) \\<br>            &amp;=\sum_x \sum_u P(y|x,z,u)P(u|x,z)P(x)\\<br>            &amp;=\sum_x P(y|x,z)P(x)<br>\end{aligned}<br>$$</p>
+<p>这样我们可以将公式中含u的用可观测的变量x,y,z计算出来，代回(*)式，可得</p>
+<p>$$P(y|do(x))=\sum_z P(z|x) \sum_{x’}P(y|x’,z)P(x’) \tag{**}$$</p>
+<p>等式右侧的数据都可以一致地从非实验数据中得到，由此，只要我们能找到一个像图中这样的中介变量Z,就可以得到一个X到Y的因果影响的无偏非参数估计。</p>
+<p>更简单和直观的一种方法，(**)式也可以看作连续应用了两次back-door 准则，我们可以将X到Z的因果影响分解为</p>
+<p>$$P(y|do(x))=\sum_z P(y|do(z))P(z|do(x)) $$</p>
+<p>因此我们可以分别计算X对Z的因果影响，和Z到Y的因果影响。</p>
+<p>X与Z之间没有其他路径，容易看出有$P(z|do(x))=p(z|x)$。</p>
+<p>Z到Y之间有一条back-door $Z\leftarrow X \leftarrow U \rightarrow Y$，我们可以通过控制X来封锁这条back-door,</p>
+<p>$$P(y|do(x)) = \sum_z P(y|do(z))P(z|do(x))$$</p>
+<p>结合这两个back-door 公式就得到了(**)式。通过第二种思考方式，我们可以将front-door推广为如下定义。</p>
+<blockquote>
+<p><strong>定义：Front-Door</strong><br>一个变量集合Z关于一组有序变量对(X,Y)满足Front-Door准则，意味着它满足以下条件：<br>1.Z封锁了所有X到Y的直接路径<br>2.X到Y之间不存在没有被封锁的back-door Path<br>3.所有从Z到Y的 back-door path都会被X封锁</p>
+</blockquote>
+<blockquote>
+<p><strong>定理：Front-Door Adjustment</strong><br>如果存在Z关于(X，Y)满足front-door准则并且P(x,z)&gt;0，那么X到Y的因果影响就是可识别的，并可由下式给出：<br>$$P(y|do(x))=\sum_z P(z|x) \sum_{x’}P(y|x’,z)P(x’)$$  </p>
+</blockquote>
+<p>值得注意的是，在上文中给出的定义有些过于严格了，情况2,3中的back-door也可以存在，只要我们能用其他可观测的变量封锁住它们。在下一节中，我们将介绍一种有效的符号化的机制，它可以用来处理更复杂的情况。</p>
+<h2 id="介入的-calculus"><a href="#介入的-calculus" class="headerlink" title="介入的 calculus"></a>介入的 calculus</h2><p>在本节中，我们将考虑一系列推理规则，这些规则提供了一种语义方法，使我们可以从观察得到的数据中推出(或验证)某个介入的因果影响。</p>
+<p>我们假设给定了一个因果图G，图中有一部分结点是可观测的，另一部分是不可观测的，我们的目标是找到对某个变量集X的介入对另一个变量集Y的因果影响，即P(y|do(x)),我们想要找到的是这个表达式的一个等价形式，在这个等价形式中只包含可观测量的标准概率。如果目标表达式能够规约到这样一个等价形式，那X到Y的因果影响就是可以识别的。</p>
+<p>这一系列推理和规约的规则，我们将它们称之为do-calculus。</p>
+<h3 id="Inference-Rules"><a href="#Inference-Rules" class="headerlink" title="Inference Rules"></a>Inference Rules</h3><p>首先说明即将要用到的几个基本符号。令X,Y,Z是一个因果DAG G中的三个任意不相交的变量集，我们用$G_X$代表从G中删去所有指向X的有向边后的图，用$G_{\underline{X}}$代表从G中删去所有从X出发的有向边后的图，我们也可以用一个符号代表同时两种边的情况，如$G_{\overline{X}\underline}$。另外，$P(y|do(x),z)=P(y,z|do(x))/P(z|do(x))$代表在主动将X恒定控制为x并且观察到Z=z的情况下，Y=y的概率。</p>
+<p>下面阐述三个最基本的推理规则：</p>
+<blockquote>
+<p><strong>定理：Rules of do Calculus</strong><br>令G代表与某个因果模型相关的一个有向无环图，令$P(\cdot)$代表该因果模型中变量的概率分布，对任意不相交的变量集和X,Y,Z和W，我们有下列的规则：<br><em>Rule 1(Insertion/deletion of observations):</em><br>$$P(y|do(x),z,w)=P(y|do(x),w),\  if(Y \perp Z|X,W)<em>{G</em>{\overline{X}}}$$<br><em>Rule 2(Action/observation exchange)</em><br>$$P(y|do(x),do(z),w) = P(y|do(x),z,w),\ if (Y\perp Z|X,W)<em>{G</em>{\overline{X}\underline{Z}}} $$<br><em>Rule 3(Insertion/deletion of actions):</em><br>$$P(y|do(x),do(z),w)=P(y|do(x),w),\ if(Y\perp Z|X,W)<em>{G</em>{\overline{X},\overline{Z(W)}}} $$</p>
+</blockquote>
+<p>每条规则的推理都是根据“介入”的基本概念得出的，即do(X=x)意味着删去图中所有指向X的有向边，此时要考虑新得到的子图$G_{\overline{X}}$。详细的推倒可以参考《causality》3.4.2。</p>
+<p>这三条规则已经被证明是完全的，可以充分地推出所有可识别的因果影响(Shpitser and Pearl 2006a; Huang and Valtorta 2006)。但是，如何用合理的顺序使用这些规则使得我们可以将目标规约成一个可计算的公式，我们尚且还没有一个系统化的方法，因此更直接的图形化的准则仍然被需要。</p>
+<p align="right"> (完) </p>
       
     </div>
     
@@ -641,7 +680,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#马尔科夫模型中的介入"><span class="nav-number">2.</span> <span class="nav-text">马尔科夫模型中的介入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的表达"><span class="nav-number">2.1.</span> <span class="nav-text">介入的表达</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的计算"><span class="nav-number">2.2.</span> <span class="nav-text">介入的计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的可识别性"><span class="nav-number">2.3.</span> <span class="nav-text">介入的可识别性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#控制干扰因子"><span class="nav-number">3.</span> <span class="nav-text">控制干扰因子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Back-door-Criterion"><span class="nav-number">3.1.</span> <span class="nav-text">Back-door Criterion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Front-door-Criterion"><span class="nav-number">3.2.</span> <span class="nav-text">Front-door Criterion</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#马尔科夫模型中的介入"><span class="nav-number">2.</span> <span class="nav-text">马尔科夫模型中的介入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的表达"><span class="nav-number">2.1.</span> <span class="nav-text">介入的表达</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的计算"><span class="nav-number">2.2.</span> <span class="nav-text">介入的计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的可识别性"><span class="nav-number">2.3.</span> <span class="nav-text">介入的可识别性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#控制干扰因子"><span class="nav-number">3.</span> <span class="nav-text">控制干扰因子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Back-door-Criterion"><span class="nav-number">3.1.</span> <span class="nav-text">Back-door Criterion</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Front-door-Criterion"><span class="nav-number">3.2.</span> <span class="nav-text">Front-door Criterion</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#介入的-calculus"><span class="nav-number">4.</span> <span class="nav-text">介入的 calculus</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Inference-Rules"><span class="nav-number">4.1.</span> <span class="nav-text">Inference Rules</span></a></li></ol></li></ol></div>
             
 
           </div>
