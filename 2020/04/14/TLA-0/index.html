@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="ustclhx&#39;s blog">
 <meta property="og:description" content="TLA+是分布式领域大名鼎鼎的Turing 获得者 Leslie Lamport 发明的针对数字系统（算法，程序，计算机系统）的一种high-level 建模语言。TLA+专门为并行和分布式系统所设计，high-level意味着在代码之上的更高的设计抽象，在我们正式开始写下第一行代码之前，TLA+就可以帮助我们设计并验证一个复杂系统。 简单来讲，TLA+的任务用严格的数学语言去刻画（specify">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-22T11:45:38.052Z">
+<meta property="og:updated_time" content="2020-04-22T11:48:10.523Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TLA+笔记(0)- 序： 抽象的意义">
 <meta name="twitter:description" content="TLA+是分布式领域大名鼎鼎的Turing 获得者 Leslie Lamport 发明的针对数字系统（算法，程序，计算机系统）的一种high-level 建模语言。TLA+专门为并行和分布式系统所设计，high-level意味着在代码之上的更高的设计抽象，在我们正式开始写下第一行代码之前，TLA+就可以帮助我们设计并验证一个复杂系统。 简单来讲，TLA+的任务用严格的数学语言去刻画（specify">
@@ -375,7 +375,7 @@
       
         <p><a href="http://lamport.azurewebsites.net/tla/tla.html" target="_blank" rel="noopener">TLA+</a>是分布式领域大名鼎鼎的Turing 获得者 Leslie Lamport 发明的针对数字系统（算法，程序，计算机系统）的一种high-level 建模语言。TLA+专门为并行和分布式系统所设计，high-level意味着在代码之上的更高的设计抽象，在我们正式开始写下第一行代码之前，TLA+就可以帮助我们设计并验证一个复杂系统。</p>
 <p>简单来讲，TLA+的任务用严格的数学语言去刻画（specify）一个系统中可能允许的所有行为，即，它在一次执行过程中所有可能达到的状态。TLA+没有办法直接帮我们产出任何一句有实际生产意义的代码，但它给我们提供了一个新的思考方式和设计工具，学习和理解 TLA+ ,无疑可以帮助你成为一个更好的编程者和工程师。</p>
-<p>本系列博客可以看作TLA+的学习心笔记和心得，主要学习资料为[Thw TLA+ Video Course视频]（<a href="http://lamport.azurewebsites.net/video/videos.html）和《Specifying" target="_blank" rel="noopener">http://lamport.azurewebsites.net/video/videos.html）和《Specifying</a> Systems》。 </p>
+<p>本系列博客可以看作TLA+的学习心笔记和心得，主要学习资料为<a href="http://lamport.azurewebsites.net/video/videos.html" target="_blank" rel="noopener">The TLA+ Video Course</a>和《Specifying Systems》。 </p>
 <p>本文为本系列的第一篇，作为系列的序篇主要谈一些TLA+学习过程中产生的主观体会，后面的章节会递进的介绍TLA+的语法和设计细节。</p>
 <h2 id="Why-TLA-可分析抽象的意义"><a href="#Why-TLA-可分析抽象的意义" class="headerlink" title="Why TLA+? : 可分析抽象的意义"></a>Why TLA+? : 可分析抽象的意义</h2><p>相比于传统的串行计算，并行和分布式计算的开发，研究和验证难度都要高上好几个数量级。一方面，多个异步节点的并发系统中可能的行为数量相比单节点可能有指数级别的倍增，另一方面，人类的大脑并不擅长处理并行，我们很容易遗漏掉一些边界情况，给系统留下一些不易发现的bug。</p>
 <p>与此同时，随着技术的进步，计算机的系统结构越来越多样越来越复杂，这导致系统研究成本进一步居高不下，在开发和研究某一个新型系统时，往往要经过原型系统实现和基准程序测试两个成本极高的阶段，才能对系统的性质进行实质的分析和调整。</p>
