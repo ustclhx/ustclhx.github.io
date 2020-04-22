@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="TLA+,分布式系统,">
 
 
 
@@ -79,13 +79,18 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="ustclhx&#39;s blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="TLA+是分布式领域大名鼎鼎的Turing 获得者 Leslie Lamport 发明的针对数字系统（算法，程序，计算机系统）的一种high-level 建模语言。TLA+专门为并行和分布式系统所设计，high-level意味着在代码之上的更高的设计抽象，在我们正式开始写下第一行代码之前，TLA+就可以帮助我们设计并验证一个复杂系统。 简单来讲，TLA+的任务用严格的数学语言去刻画（specify">
+<meta name="keywords" content="TLA+,分布式系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TLA+笔记(0)- 序： 抽象的意义">
+<meta property="og:url" content="http://yoursite.com/2020/04/14/TLA-0/index.html">
 <meta property="og:site_name" content="ustclhx&#39;s blog">
+<meta property="og:description" content="TLA+是分布式领域大名鼎鼎的Turing 获得者 Leslie Lamport 发明的针对数字系统（算法，程序，计算机系统）的一种high-level 建模语言。TLA+专门为并行和分布式系统所设计，high-level意味着在代码之上的更高的设计抽象，在我们正式开始写下第一行代码之前，TLA+就可以帮助我们设计并验证一个复杂系统。 简单来讲，TLA+的任务用严格的数学语言去刻画（specify">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-04-22T11:45:38.052Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ustclhx&#39;s blog">
+<meta name="twitter:title" content="TLA+笔记(0)- 序： 抽象的意义">
+<meta name="twitter:description" content="TLA+是分布式领域大名鼎鼎的Turing 获得者 Leslie Lamport 发明的针对数字系统（算法，程序，计算机系统）的一种high-level 建模语言。TLA+专门为并行和分布式系统所设计，high-level意味着在代码之上的更高的设计抽象，在我们正式开始写下第一行代码之前，TLA+就可以帮助我们设计并验证一个复杂系统。 简单来讲，TLA+的任务用严格的数学语言去刻画（specify">
 
 
 
@@ -115,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2020/04/14/TLA-0/">
 
 
 
 
 
-  <title>ustclhx's blog</title>
+  <title>TLA+笔记(0)- 序： 抽象的意义 | ustclhx's blog</title>
   
 
 
@@ -150,8 +155,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -244,10 +248,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-       
-            
 
   
 
@@ -277,9 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/04/14/TLA-0/" itemprop="url">TLA+笔记(0)- 序： 抽象的意义</a></h1>
+          <h1 class="post-title" itemprop="name headline">TLA+笔记(0)- 序： 抽象的意义</h1>
         
 
         <div class="post-meta">
@@ -372,9 +373,7 @@
       
 
       
-        
-          
-            <p><a href="http://lamport.azurewebsites.net/tla/tla.html" target="_blank" rel="noopener">TLA+</a>是分布式领域大名鼎鼎的Turing 获得者 Leslie Lamport 发明的针对数字系统（算法，程序，计算机系统）的一种high-level 建模语言。TLA+专门为并行和分布式系统所设计，high-level意味着在代码之上的更高的设计抽象，在我们正式开始写下第一行代码之前，TLA+就可以帮助我们设计并验证一个复杂系统。</p>
+        <p><a href="http://lamport.azurewebsites.net/tla/tla.html" target="_blank" rel="noopener">TLA+</a>是分布式领域大名鼎鼎的Turing 获得者 Leslie Lamport 发明的针对数字系统（算法，程序，计算机系统）的一种high-level 建模语言。TLA+专门为并行和分布式系统所设计，high-level意味着在代码之上的更高的设计抽象，在我们正式开始写下第一行代码之前，TLA+就可以帮助我们设计并验证一个复杂系统。</p>
 <p>简单来讲，TLA+的任务用严格的数学语言去刻画（specify）一个系统中可能允许的所有行为，即，它在一次执行过程中所有可能达到的状态。TLA+没有办法直接帮我们产出任何一句有实际生产意义的代码，但它给我们提供了一个新的思考方式和设计工具，学习和理解 TLA+ ,无疑可以帮助你成为一个更好的编程者和工程师。</p>
 <p>本系列博客可以看作TLA+的学习心笔记和心得，主要学习资料为[Thw TLA+ Video Course视频]（<a href="http://lamport.azurewebsites.net/video/videos.html）和《Specifying" target="_blank" rel="noopener">http://lamport.azurewebsites.net/video/videos.html）和《Specifying</a> Systems》。 </p>
 <p>本文为本系列的第一篇，作为系列的序篇主要谈一些TLA+学习过程中产生的主观体会，后面的章节会递进的介绍TLA+的语法和设计细节。</p>
@@ -416,8 +415,6 @@
 <p>接下来的文章中，我们将使用lamport在视频课程和《Specifying System》中的一些具体案例，具体阐述怎么用TLA+刻画和验证系统。</p>
 <p align="right"> (完) </p>
 
-          
-        
       
     </div>
     
@@ -427,186 +424,72 @@
     
 
     
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="ustclhx 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="ustclhx 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
 
     
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-        
-    
-       
-    
-       
-    
-       
-    
-       
-    
-       
-            
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/25/【综述】Judea-Pearl-和因果推理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ustclhx">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/1.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="ustclhx's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/10/25/【综述】Judea-Pearl-和因果推理/" itemprop="url">【综述随笔】Judea Pearl 和因果推理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-25T19:35:26+08:00">
-                2019-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/因果推理/" itemprop="url" rel="index">
-                    <span itemprop="name">因果推理</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/TLA/" rel="tag"># TLA+</a>
           
-
+            <a href="/tags/分布式系统/" rel="tag"># 分布式系统</a>
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/10/25/【综述】Judea-Pearl-和因果推理/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/25/【综述】Judea-Pearl-和因果推理/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因果关系是什么？因果关系从何而来？我们能用因果关系去做什么？</p>
-<p>如果把这些问题抛给一个从未思考过此类问题的人，那么他可能会发现这些问题看似简单却又难以回答。这是因为因果关系充斥在我们的日常生活之中，而且一般能被我们的直觉和潜意识很好的处理。比如“公鸡打鸣”和“太阳即将升起”，我们可以很容易的判断后者是前者的因，而不是相反。但人类长久以来一直缺乏一种严格的、数学化的语言去描述因果，这个问题吸引了部分哲学家的关注和热烈讨论，却一直被主流的科学界有意或无意的忽视.</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/10/25/【综述】Judea-Pearl-和因果推理/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/06/causality-3/" rel="next" title="《causality》读书笔记 Ⅲ：使用因果图识别因果效应">
+                <i class="fa fa-chevron-left"></i> 《causality》读书笔记 Ⅲ：使用因果图识别因果效应
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-
-    
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -616,13 +499,11 @@
   </article>
 
 
-        
-    
-       
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -630,6 +511,13 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
         </div>
         
@@ -650,8 +538,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -713,6 +610,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-TLA-可分析抽象的意义"><span class="nav-number">1.</span> <span class="nav-text">Why TLA+? : 可分析抽象的意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-Mathematics-数学是抽象的语言"><span class="nav-number">2.</span> <span class="nav-text">Why Mathematics? : 数学是抽象的语言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Why-Temporal-Logic-计算思维和状态机"><span class="nav-number">3.</span> <span class="nav-text">Why Temporal Logic? : 计算思维和状态机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -853,6 +766,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
