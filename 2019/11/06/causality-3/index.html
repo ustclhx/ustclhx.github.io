@@ -91,7 +91,9 @@
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/2.png">
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/3.png">
 <meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/4.png">
-<meta property="og:updated_time" content="2019-12-01T11:41:57.637Z">
+<meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/6.png">
+<meta property="og:image" content="http://yoursite.com/2019/11/06/causality-3/7.png">
+<meta property="og:updated_time" content="2020-04-22T11:55:18.141Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《causality》读书笔记 Ⅲ：使用因果图识别因果效应">
 <meta name="twitter:description" content="简介在前一章中我们解决了怎样从原始数据中学习发现因果关系的问题，而很多领域中，人类已经有多年的研究历史，可以给出可靠的先验知识。我们接下来就将探索，在有数据和定性的因果假设相结合的情况下，如何推断出这些因果关系。 因果推理的知识允许我们去预测在一个假设的介入下，系统会做出怎样的反应。本章中将用因果图的形式，对介入给出一个形式化的语义概念。我们将看到，只要数据可以假设被一个无环的、没有隐变量的因果图">
@@ -404,7 +406,7 @@
 <p><img src="3.png" alt="3"></p>
 <p>借助上式，我们可以估计$do(x_i)$对任意与$X_i \bigcup PA_i$不相交的变量集Y的因果影响，只要让上式对所有除$Y \bigcup X_i$外的变量求和即可。这样便可以得到一个求解直接影响的定理。</p>
 <blockquote>
-<p><strong>定理：Adjustment for Direct Causes</strong><br>$PA_i$代表变量$X_i$的直接原因，Y是任意与${X_i\bigcup PA_i}$不相交的变量集合，那么介入do$(X_i=x’<em>i)$对Y的影响等于下式：<br>$$P(y|do(x’_i))=\sum</em>{pa_i}P(y|x_i,pa_i)P(pa_i)$$<br>其中，$P(y|x_i,pa_i)$和$P(pa_i)$代表介入前的概率分布。</p>
+<p><strong>定理：Adjustment for Direct Causes</strong><br>$PA_i$代表变量$X_i$的直接原因，Y是任意与${X_i\bigcup PA_i}$不相交的变量集合，那么介入do$(X_i=x_i’)$对Y的影响等于下式：<br>$$P(y|do(x_i’))=\sum_{pa_i}P(y|x_i,pa_i)P(pa_i)$$<br>其中，$P(y|x_i,pa_i)$和$P(pa_i)$代表介入前的概率分布。</p>
 </blockquote>
 <p>上式通过调节$X_i$的双亲结点$PA_i$，并根据$PA_i=pa_i$的概率计算加权平均，最终得到对Y的影响，注意到通过这种方式，我们所需要的信息可以只是可以直接观测到的干预前的信息。</p>
 <p>我们可选择的介入方式还可以进一步拓展，我们可以对一组变量集合$S$而不是单个变量进行修改，也可以不局限于用定值而用新的函数关系代替。</p>
@@ -456,7 +458,7 @@
 <p>$$P(y|do(x)) = \sum_z P(y|do(z))P(z|do(x))$$</p>
 <p>结合这两个back-door 公式就得到了(**)式。通过第二种思考方式，我们可以将front-door推广为如下定义。</p>
 <blockquote>
-<p><strong>定义：Front-Door</strong><br>一个变量集合Z关于一组有序变量对(X,Y)满足Front-Door准则，意味着它满足以下条件：<br>1.Z封锁了所有X到Y的直接路径<br>2.X到Y之间不存在没有被封锁的back-door Path<br>3.所有从Z到Y的 back-door path都会被X封锁</p>
+<p><strong>定义：Front-Door</strong><br>一个变量集合Z关于一组有序变量对(X,Y)满足Front-Door准则，意味着它满足以下条件：<br>1.Z封锁了所有X到Y的直接路径<br>2.X到Z之间不存在没有被封锁的back-door Path<br>3.所有从Z到Y的 back-door path都会被X封锁</p>
 </blockquote>
 <blockquote>
 <p><strong>定理：Front-Door Adjustment</strong><br>如果存在Z关于(X，Y)满足front-door准则并且P(x,z)&gt;0，那么X到Y的因果影响就是可识别的，并可由下式给出：<br>$$P(y|do(x))=\sum_z P(z|x) \sum_{x’}P(y|x’,z)P(x’)$$  </p>
@@ -465,13 +467,25 @@
 <h2 id="介入的-calculus"><a href="#介入的-calculus" class="headerlink" title="介入的 calculus"></a>介入的 calculus</h2><p>在本节中，我们将考虑一系列推理规则，这些规则提供了一种语义方法，使我们可以从观察得到的数据中推出(或验证)某个介入的因果影响。</p>
 <p>我们假设给定了一个因果图G，图中有一部分结点是可观测的，另一部分是不可观测的，我们的目标是找到对某个变量集X的介入对另一个变量集Y的因果影响，即P(y|do(x)),我们想要找到的是这个表达式的一个等价形式，在这个等价形式中只包含可观测量的标准概率。如果目标表达式能够规约到这样一个等价形式，那X到Y的因果影响就是可以识别的。</p>
 <p>这一系列推理和规约的规则，我们将它们称之为do-calculus。</p>
-<h3 id="Inference-Rules"><a href="#Inference-Rules" class="headerlink" title="Inference Rules"></a>Inference Rules</h3><p>首先说明即将要用到的几个基本符号。令X,Y,Z是一个因果DAG G中的三个任意不相交的变量集，我们用$G_X$代表从G中删去所有指向X的有向边后的图，用$G_{\underline{X}}$代表从G中删去所有从X出发的有向边后的图，我们也可以用一个符号代表同时两种边的情况，如$G_{\overline{X}\underline}$。另外，$P(y|do(x),z)=P(y,z|do(x))/P(z|do(x))$代表在主动将X恒定控制为x并且观察到Z=z的情况下，Y=y的概率。</p>
+<h3 id="Inference-Rules"><a href="#Inference-Rules" class="headerlink" title="Inference Rules"></a>Inference Rules</h3><p>首先说明即将要用到的几个基本符号。令X,Y,Z是一个因果DAG G中的三个任意不相交的变量集，我们用$G_X$代表从G中删去所有指向X的有向边后的图，用$G_{\underline{X}}$代表从G中删去所有从X出发的有向边后的图，我们也可以用一个符号代表同时两种边的情况，如$G_{\overline{X}\underline{Z}}$。另外，$P(y|do(x),z)=P(y,z|do(x))/P(z|do(x))$代表在主动将X恒定控制为x并且观察到Z=z的情况下，Y=y的概率。</p>
 <p>下面阐述三个最基本的推理规则：</p>
 <blockquote>
-<p><strong>定理：Rules of do Calculus</strong><br>令G代表与某个因果模型相关的一个有向无环图，令$P(\cdot)$代表该因果模型中变量的概率分布，对任意不相交的变量集和X,Y,Z和W，我们有下列的规则：<br><em>Rule 1(Insertion/deletion of observations):</em><br>$$P(y|do(x),z,w)=P(y|do(x),w),\  if(Y \perp Z|X,W)<em>{G</em>{\overline{X}}}$$<br><em>Rule 2(Action/observation exchange)</em><br>$$P(y|do(x),do(z),w) = P(y|do(x),z,w),\ if (Y\perp Z|X,W)<em>{G</em>{\overline{X}\underline{Z}}} $$<br><em>Rule 3(Insertion/deletion of actions):</em><br>$$P(y|do(x),do(z),w)=P(y|do(x),w),\ if(Y\perp Z|X,W)<em>{G</em>{\overline{X},\overline{Z(W)}}} $$</p>
+<p><strong>定理：Rules of do Calculus</strong><br>令G代表与某个因果模型相关的一个有向无环图，令$P(\cdot)$代表该因果模型中变量的概率分布，对任意不相交的变量集和X,Y,Z和W，我们有下列的规则: </p>
 </blockquote>
+<!-- *Rule 1(Insertion/deletion of observations):*     
+$$ P(y|do(x),z,w)=P(y|do(x),w),if(Y \perp Z|X,W)_{G_{\overline{X}}} $$
+<!-- >*Rule 2(Action/observation exchange)*  
+>$$P(y|do(x),do(z),w) = P(y|do(x),z,w),if (Y\perp Z|X,W)_{G_{\overline{X}\underline{Z}}} $$
+>*Rule 3(Insertion/deletion of actions):*  
+>$$P(y|do(x),do(z),w)=P(y|do(x),w),if(Y\perp Z|X,W)_{G_{\overline{X},\overline{Z(W)}}} $$ --> -->
+
+<p><img src="6.png" alt="6"></p>
+<p><img src="7.png" alt="7"></p>
 <p>每条规则的推理都是根据“介入”的基本概念得出的，即do(X=x)意味着删去图中所有指向X的有向边，此时要考虑新得到的子图$G_{\overline{X}}$。详细的推倒可以参考《causality》3.4.2。</p>
-<p>这三条规则已经被证明是完全的，可以充分地推出所有可识别的因果影响(Shpitser and Pearl 2006a; Huang and Valtorta 2006)。但是，如何用合理的顺序使用这些规则使得我们可以将目标规约成一个可计算的公式，我们尚且还没有一个系统化的方法，因此更直接的图形化的准则仍然被需要。</p>
+<p>我们可以给每条规则一个简单的语义上的解释。Rule 1 允许增加或者删除一个可观察量，Rule 2 允许介入量和可观察量的相互替换，Rule 3 允许增加或者替换一个介入量。这三条规则已经被证明是完备的(即，我们可以将这三条规则看作因果公理体系中的三条公理，这样的公理体系是完备的)，可以充分地推出所有可识别的因果影响(Shpitser and Pearl 2006a; Huang and Valtorta 2006)。</p>
+<p>但是，由这三条规则构成的do-calculus，可以帮我们验证一个已有的介入问题的解的正确性，但不能去帮我们发现一个解。这类似于平面几何中的证明，就算掌握了已有的定理和公理，但如何使用它们还需要我们数学上的智慧。让机器自动地实现这些过程仍然是一个无法解决的难题。</p>
+<p>幸运的是，判定问题已经被证明是可解决的，由Pearl的学生Ilya Shpitser 发现的算法可以再多项式时间内判断一个介入问题的解是否存在。</p>
+<p>虽然解决了判定问题，但如何用合理的顺序使用这些规则使得我们可以将目标规约成一个可计算的公式，我们尚且还难以有一个自动化系统化的方法，因此更直接的图形化的准则(back-door,front-door)仍然被需要。</p>
 <p align="right"> (完) </p>
       
     </div>
@@ -545,8 +559,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/04/14/TLA-0/" rel="prev" title="TLA+笔记(0)- 序： 抽象的意义">
-                TLA+笔记(0)- 序： 抽象的意义 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/01/16/causality-4/" rel="prev" title="causality-4.md">
+                causality-4.md <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -629,7 +643,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

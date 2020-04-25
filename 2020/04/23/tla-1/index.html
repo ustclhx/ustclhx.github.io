@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="TLA+,分布式系统,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在序章中我们提到了，TLA+的核心抽象就是将系统的执行用一系列离散的状态变化来表示。 在TLA+中，我们称这样的状态序列为一个行为（behavior),我们的目标就是刻画出系统中所有可能的行为。 而一个状态需要用相关变量的值来刻画，因此，一个完整的状态机的刻画需要以下三步：  1.给出系统中需要关心的变量。2.所有可能的变量初始值。3.变量在当前状态下的值和在下一状态下的值之间的联系  本篇文章中">
+<meta name="keywords" content="TLA+,分布式系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TLA+(1)-Some tiny examples">
+<meta property="og:url" content="http://yoursite.com/2020/04/23/tla-1/index.html">
+<meta property="og:site_name" content="ustclhx&#39;s blog">
+<meta property="og:description" content="在序章中我们提到了，TLA+的核心抽象就是将系统的执行用一系列离散的状态变化来表示。 在TLA+中，我们称这样的状态序列为一个行为（behavior),我们的目标就是刻画出系统中所有可能的行为。 而一个状态需要用相关变量的值来刻画，因此，一个完整的状态机的刻画需要以下三步：  1.给出系统中需要关心的变量。2.所有可能的变量初始值。3.变量在当前状态下的值和在下一状态下的值之间的联系  本篇文章中">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2020/04/23/tla-1/1.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/23/tla-1/2.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/23/tla-1/3.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/23/tla-1/4.png">
+<meta property="og:updated_time" content="2020-04-25T14:51:58.017Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TLA+(1)-Some tiny examples">
+<meta name="twitter:description" content="在序章中我们提到了，TLA+的核心抽象就是将系统的执行用一系列离散的状态变化来表示。 在TLA+中，我们称这样的状态序列为一个行为（behavior),我们的目标就是刻画出系统中所有可能的行为。 而一个状态需要用相关变量的值来刻画，因此，一个完整的状态机的刻画需要以下三步：  1.给出系统中需要关心的变量。2.所有可能的变量初始值。3.变量在当前状态下的值和在下一状态下的值之间的联系  本篇文章中">
+<meta name="twitter:image" content="http://yoursite.com/2020/04/23/tla-1/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/23/tla-1/">
+
+
+
+
+
+  <title>TLA+(1)-Some tiny examples | ustclhx's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?bed8b7ef588a5c09a7073424af5f9cdc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ustclhx's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-causality">
+          <a href="/categories/《causality》" rel="section">
+            
+            《causality》
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/23/tla-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ustclhx">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ustclhx's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">TLA+(1)-Some tiny examples</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-23T10:33:48+08:00">
+                2020-04-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/分布式系统/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式系统</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TLA/" itemprop="url" rel="index">
+                    <span itemprop="name">TLA+</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/23/tla-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/23/tla-1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在序章中我们提到了，TLA+的核心抽象就是将系统的执行用一系列离散的状态变化来表示。</p>
+<p>在TLA+中，我们称这样的状态序列为一个行为（behavior),我们的目标就是刻画出系统中所有可能的行为。</p>
+<p>而一个状态需要用相关变量的值来刻画，因此，一个完整的状态机的刻画需要以下三步：</p>
+<blockquote>
+<p><strong>1.给出系统中需要关心的变量。</strong><br><strong>2.所有可能的变量初始值。</strong><br><strong>3.变量在当前状态下的值和在下一状态下的值之间的联系</strong></p>
+</blockquote>
+<p>本篇文章中将用几个基础的例子，说明TLA+的一些基础语法，以及如何用TLA+表现出上述的三个必要结构。</p>
+<h2 id="Hour-Clock"><a href="#Hour-Clock" class="headerlink" title="Hour Clock"></a>Hour Clock</h2><p>首先从刻画一个最简单的数字时钟开始，为了尽可能的简单，我们让我们的时钟只显示小时，并且不关心它显示的时间与真实时间的关系。</p>
+<p>在这样简单的时钟系统中，我们只需要关心它显示的时间这一个变量即可，用hr表示。</p>
+<p>hr应该是一个可以在1到12之间循环变动的变量，比如，它可以有如下的行为：</p>
+<p>$$[hr = 11] \rightarrow [hr = 12] \rightarrow [hr = 1] \rightarrow [hr = 2]\rightarrow …$$</p>
+<p>我们的目标就是用一个specification刻画出类似这样所有可能的行为。《Specifying system》中给出的一种刻画方式如下。</p>
+<p><img src="1.png" alt="1"></p>
+<p>借助这一个简单的例子，我们逐句介绍以下TLA+的基础语法：</p>
+<ul>
+<li>TLA+代码以MODULE名开头，MODULE类似于程序语言中的.c,.py这样的编程文件。一个specification可以包含多个module，hour clock的specification仅包含一个module。</li>
+<li>可以通过EXTENDS来引入其他模块，类似于编程语言中的imoprt或者include,EXTENDS M将名为M的模块中定义的declarations, definitions, assumptions, 和theorem全部合并进当前模块。  </li>
+<li>HourClock中引入了Naturals模块，Naturals模块中定义了有关自然数的各种操作符，比如+，-等等，TLA+中并没有定义这些基础的运算符，只有引入Naturals模块才可以使用。</li>
+<li>VARIABLE 关键词用来声明所需要的变量。不同于编程语言，TLA+中的变量并没有类型的概念，也没有默认值，此外TLA+中只有一个名字空间，即，所有的变量都被视为系统的全局变量。在后面更复杂的例子中，读者可以尝试感受这样设计的好处。</li>
+<li>HCini语句定义了变量的初始状态：<br>$$ HCini \triangleq hr \in （1..12)$$<br>意味着hr初始值可以为1到12之间的任何整数。“..”是Naturals中定义的运算符，“i..j”代表了从i到j的所有整数的集合。</li>
+<li>HCnxt语句定义了状态的迁移:<br>$$HCnxt \triangleq hr’ = IF hr\ \neq 12\ THEN\ hr+1\ ELSE\ 1$$<br>primed(hr’) 和unprimed(hr) 变量分别代表了下一状态和当前状态下的变量的值。这样带有prime(‘)的变量的公式被称为action。注意，action是一个公式，而不是一个执行，他规定的是执行中状态变化的规则，而不是系统一定要做的执行。</li>
+<li>$\square$是一个时序运算符，$\square F$意味着公式F永远是对的。</li>
+<li>最终我们希望用一个单独的公式HC刻画整个系统，可以用合取符号$\wedge$链接多个我们需要的公式。$HC = HCini \wedge \square HCnxt$描述了 系统的behavior要满足：(1)初始的状态满足HCnxt（2）后续的每个step都要满足HCnext。</li>
+<li>Theorem 描述了系统应该自动满足的性质，即，它不是我们在SPEC中定义的规范，但是如果我们满足了SPEC，那Theorem也应该是正确的。在Hour Clock里，我们不难如果满足HC,那hr取值应该是永远在1到12之间循环变动的，即：<br>$$ THEOREM\ \ HC \Rightarrow \square HCini$$  </li>
+<li>Theorem 反应了系统的设计目标，可以用来检验系统的正确性，但TLA+的目标是刻画系统，正确性的证明可以通过数学方法或者TLC 来验证。</li>
+<li>除了开头的命名行以外，TLA+中还会出现两种横线。<br><img src="2.png" alt="2"><br>可以出现在代码中的任何位置，只是为了更好划分代码的不同部分，没有实际意义。<br><img src="3.png" alt="3"><br>出现在代码的最后，用来标志代码的结束。</li>
+</ul>
+<p>此外，为了方便程序上的书写，Lamport还提供了一套纯ASCII的版本，就是前文中代码的第二个版本。对一些ASCII中原本没有的符号，该版本给出了一些用ASCII码的代替书写方式，如，$\square$写作[],$\in$写着\in，$\neq$写作#或者=，$\neq$写作==。</p>
+<h2 id="A-C-Program"><a href="#A-C-Program" class="headerlink" title="A C Program"></a>A C Program</h2><p>一段程序代码也可以被轻松地转换为TLA+代码，我们以一段简单的C代码为例。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  i = someNumber();</span><br><span class="line">  i = i+<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>与Hour Clock 不同的一点是，想要刻画该段代码中的状态的变化，除了声明变量i之外，我们还需要一个变量帮我们追踪程序执行到了哪里，所以我们另外声明一个变量pc,熟悉指令流水的读者对这个变量名不会陌生，PC代表了程序计数器，用来存储正在执行的指令的地址。</p>
+<p>我们可以将PC分别赋值为”start”,”middle”,”done”用来标识程序运行的位置，最终得到的TLA+代码如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">----------------MOUDLE CProgram------------------------</span><br><span class="line">EXTENDS Intergers</span><br><span class="line">VARIABLES i,pc</span><br><span class="line"></span><br><span class="line">Init == (pc = &quot;start&quot;)/\(i = 0)</span><br><span class="line"></span><br><span class="line">Next == \/ /\ pc = &quot;start&quot;</span><br><span class="line">           /\ i&apos; \in 0..1000</span><br><span class="line">           /\ pc&apos; = &quot;middle&quot;</span><br><span class="line">        \/ /\ pc = &quot;middle&quot;</span><br><span class="line">           /\ i&apos; = i + 1</span><br><span class="line">           /\ pc&apos; = &quot;done&quot;</span><br><span class="line"></span><br><span class="line">Spec == Init /\ []Next</span><br><span class="line">=======================================================</span><br></pre></td></tr></table></figure>
+
+<p>在Next的定义中我们使用了析取符号\/，a\/b代表了a和b中至少有一个发生。 </p>
+<p>在TLA+中，我们可以将析取合取符号写在公式的前面，并让并列的符号在每一行中对齐，这样格式化的书写即方便了阅读，也可以省去使用很多繁杂的括号。</p>
+<h2 id="Die-Hard"><a href="#Die-Hard" class="headerlink" title="Die Hard"></a>Die Hard</h2><p>Lamport 为TLA+的使用者提供了一个方便的IDE:<a href="http://lamport.azurewebsites.net/tla/toolbox.html" target="_blank" rel="noopener">The TLA+ Toolbox</a>,使用Toolbox用户可以方便地书写specs并检查语法错误。</p>
+<p>此外，Toolbox 提供了一个名为TLC model checker 的工具，可以用宽度搜索的方法暴力遍历specs中所有可能到达的状态序列，以检查系统的正确性。</p>
+<p>TLA+ Toolbox 和 TLC 的具体使用方法并不复杂，读者可以自行下载学习和使用。下面我们用一个例子说明，如何使用TLC来解决一个实际的问题。</p>
+<p>如果你喜欢电影，你可能已经知道小标题中的Die Hard 其实就是大名鼎鼎的动作电影《虎胆龙威》，在这里，我们用Die Hard 指代在 Die Hard 3中主角团遇到的一个问题：</p>
+<p>如何用一个3加仑的水壶，一个5加仑的水壶，以及一个水龙头，得到正好4加仑的水？</p>
+<p>我们的思路是用TLA+刻画出两个水壶组成的系统的所有可能的状态变化，再用TLC遍历在该系统中问题是否有解。</p>
+<p>首先，考虑初始状态，水壶中初始的水量并没有影响，所以我们不妨让两个水壶都为空：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Init == /\ small = 0 </span><br><span class="line">        /\ big = 0</span><br></pre></td></tr></table></figure>
+
+<p>然后考虑所有可能的状态变化，我们可以进行的操作无非以下三种：</p>
+<ol>
+<li>装满一个水壶。</li>
+<li>倒光一个水壶。</li>
+<li>将一个水壶的水倒入另一个水壶中。</li>
+</ol>
+<p>所以我们的状态转移公式Next应该满足上述操作中任一个为真：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Next == \/ FillSmall</span><br><span class="line">        \/ FillBig</span><br><span class="line">        \/ EmptyBig</span><br><span class="line">        \/ EmptySmall</span><br><span class="line">        \/ SmallToBig</span><br><span class="line">        \/ BigToSmall</span><br></pre></td></tr></table></figure>
+
+<p>要写出六个细分的状态转移公式并不困难，但需要注意的是，对于初学者，很可能下意识地写出这样的公式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FillSmall == small&apos; =3</span><br></pre></td></tr></table></figure>
+
+<p>显然这个公式规定了我们要将small的下个状态的值设为3，但注意此时我们改变任何其他变量的值对该公示的正确性并没有影响，也就是说big可以变为任何值，包括$\sqrt 7$甚至”abc”这种毫无意义的值，毕竟TLA+的变量没有任何类型限制。</p>
+<p>因此，一个正确的action书写应该包括对其他无关变量的限制：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FillSmall == /\ small&apos; = 3</span><br><span class="line">             /\ big&apos; = big</span><br></pre></td></tr></table></figure>
+
+<p>TLA+中的变量是没有类型的，但我们可以通过定义不变量(invariance)对变量的类型做一个断言。不变量不是Spec规定的性质，但可以从spec规定的性质中推导出来，一般会被写进Theorem的后半部分。</p>
+<p>类型不变量习惯被命名为TypeOK:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TypeOK = /\small /in 0..3</span><br><span class="line">         /\ big /in 0..5</span><br></pre></td></tr></table></figure>
+
+<p>对DieHard问题的一个完整刻画如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">-------------------------- MODULE DieHard  ------------------------------</span><br><span class="line">EXTENDS Naturals</span><br><span class="line">VARIABLES small,big</span><br><span class="line"></span><br><span class="line">Init == /\ small = 0</span><br><span class="line">        /\ big = 0</span><br><span class="line"></span><br><span class="line">TypeOK == /\ small \in 0..3</span><br><span class="line">          /\ big \in 0..5</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">FillSmall == /\ small&apos; = 3</span><br><span class="line">             /\ big&apos; = big</span><br><span class="line"></span><br><span class="line">FillBig == /\ small&apos; = small</span><br><span class="line">           /\ big&apos; = 5</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">EmptySmall == /\ small&apos; = 0</span><br><span class="line">              /\ big&apos; = big</span><br><span class="line"></span><br><span class="line">EmptyBig == /\ big&apos; = 0</span><br><span class="line">            /\ small&apos; = small</span><br><span class="line"></span><br><span class="line">SmallToBig == IF small + big &lt; 5</span><br><span class="line">             THEN</span><br><span class="line">                /\ big&apos; = small + big</span><br><span class="line">                /\ small&apos; = 0</span><br><span class="line">             ELSE</span><br><span class="line">                /\ big&apos; = 5</span><br><span class="line">                /\ small&apos; = small - (5 - big)</span><br><span class="line"></span><br><span class="line">BigToSmall == IF small + big &lt; 3</span><br><span class="line">             THEN</span><br><span class="line">                /\ small&apos; = small + big</span><br><span class="line">                /\ big&apos; = 0</span><br><span class="line">             ELSE</span><br><span class="line">                /\ small&apos; = 3</span><br><span class="line">                /\ big&apos; = big - (3 - small)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Next == \/ FillSmall</span><br><span class="line">        \/ FillBig</span><br><span class="line">        \/ SmallToBig</span><br><span class="line">        \/ BigToSmall</span><br><span class="line">        \/ EmptyBig</span><br><span class="line">        \/ EmptySmall</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">============================================================================</span><br></pre></td></tr></table></figure>
+
+<p>在TLA+ Toolbox中建立这样的spec，我们就可以通过TLC来检测我们的问题有没有解。具体的做法是添加一个big = 4 的不变式：</p>
+<p><img src="4.png" alt="4"></p>
+<p>最终TLC会返回一个error,并且告诉你一个与该不变式矛盾的状态变化，这个变化序列就是问题的解。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>本篇借助三个简单的例子阐述了TLA+基本结构和基础语法，顺便简单提及了一下TLA+ 的IDE TLA+ Toolbox 以及非常有用的工具TLC checker,对TLA+有学习兴趣的话，建议一定要下载这个IDE亲身体验。</p>
+<p>在本篇及后面的文章中，可能有很多对TLA+语法讲解不清或者遗漏的地方，如有疑惑建议查阅<a href="https://lamport.azurewebsites.net/tla/summary.pdf" target="_blank" rel="noopener">A Summary of TLA+</a>。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="ustclhx 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="ustclhx 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/TLA/" rel="tag"># TLA+</a>
+          
+            <a href="/tags/分布式系统/" rel="tag"># 分布式系统</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/14/TLA-0/" rel="next" title="TLA+笔记(0)- 序： 抽象的意义">
+                <i class="fa fa-chevron-left"></i> TLA+笔记(0)- 序： 抽象的意义
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/1.jpg" alt="ustclhx">
+            
+              <p class="site-author-name" itemprop="name">ustclhx</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hour-Clock"><span class="nav-number">1.</span> <span class="nav-text">Hour Clock</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A-C-Program"><span class="nav-number">2.</span> <span class="nav-text">A C Program</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Die-Hard"><span class="nav-number">3.</span> <span class="nav-text">Die Hard</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ustclhx</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'NXqRCI0vAWGhLaHFjNhjVIqO-gzGzoHsz',
+        appKey: 'Etshjy025hgmSHEcqHoJi4PB',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

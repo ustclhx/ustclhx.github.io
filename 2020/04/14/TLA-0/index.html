@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="ustclhx&#39;s blog">
 <meta property="og:description" content="TLA+是分布式领域大名鼎鼎的Turing 获得者 Leslie Lamport 发明的针对数字系统（算法，程序，计算机系统）的一种high-level 建模语言。TLA+专门为并行和分布式系统所设计，high-level意味着在代码之上的更高的设计抽象，在我们正式开始写下第一行代码之前，TLA+就可以帮助我们设计并验证一个复杂系统。 简单来讲，TLA+的任务用严格的数学语言去刻画（specify">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-22T11:48:10.523Z">
+<meta property="og:updated_time" content="2020-04-24T12:47:43.378Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TLA+笔记(0)- 序： 抽象的意义">
 <meta name="twitter:description" content="TLA+是分布式领域大名鼎鼎的Turing 获得者 Leslie Lamport 发明的针对数字系统（算法，程序，计算机系统）的一种high-level 建模语言。TLA+专门为并行和分布式系统所设计，high-level意味着在代码之上的更高的设计抽象，在我们正式开始写下第一行代码之前，TLA+就可以帮助我们设计并验证一个复杂系统。 简单来讲，TLA+的任务用严格的数学语言去刻画（specify">
@@ -375,7 +375,9 @@
       
         <p><a href="http://lamport.azurewebsites.net/tla/tla.html" target="_blank" rel="noopener">TLA+</a>是分布式领域大名鼎鼎的Turing 获得者 Leslie Lamport 发明的针对数字系统（算法，程序，计算机系统）的一种high-level 建模语言。TLA+专门为并行和分布式系统所设计，high-level意味着在代码之上的更高的设计抽象，在我们正式开始写下第一行代码之前，TLA+就可以帮助我们设计并验证一个复杂系统。</p>
 <p>简单来讲，TLA+的任务用严格的数学语言去刻画（specify）一个系统中可能允许的所有行为，即，它在一次执行过程中所有可能达到的状态。TLA+没有办法直接帮我们产出任何一句有实际生产意义的代码，但它给我们提供了一个新的思考方式和设计工具，学习和理解 TLA+ ,无疑可以帮助你成为一个更好的编程者和工程师。</p>
-<p>本系列博客可以看作TLA+的学习心笔记和心得，主要学习资料为<a href="http://lamport.azurewebsites.net/video/videos.html" target="_blank" rel="noopener">The TLA+ Video Course</a>和《Specifying Systems》。 </p>
+<p>本系列博客可以看作TLA+的学习心笔记和心得，主要学习资料为<a href="http://lamport.azurewebsites.net/video/videos.html" target="_blank" rel="noopener">The TLA+ Video Course</a>和《Specifying Systems》。</p>
+<a id="more"></a> 
+
 <p>本文为本系列的第一篇，作为系列的序篇主要谈一些TLA+学习过程中产生的主观体会，后面的章节会递进的介绍TLA+的语法和设计细节。</p>
 <h2 id="Why-TLA-可分析抽象的意义"><a href="#Why-TLA-可分析抽象的意义" class="headerlink" title="Why TLA+? : 可分析抽象的意义"></a>Why TLA+? : 可分析抽象的意义</h2><p>相比于传统的串行计算，并行和分布式计算的开发，研究和验证难度都要高上好几个数量级。一方面，多个异步节点的并发系统中可能的行为数量相比单节点可能有指数级别的倍增，另一方面，人类的大脑并不擅长处理并行，我们很容易遗漏掉一些边界情况，给系统留下一些不易发现的bug。</p>
 <p>与此同时，随着技术的进步，计算机的系统结构越来越多样越来越复杂，这导致系统研究成本进一步居高不下，在开发和研究某一个新型系统时，往往要经过原型系统实现和基准程序测试两个成本极高的阶段，才能对系统的性质进行实质的分析和调整。</p>
@@ -404,6 +406,7 @@
 <p>计算机是一个庞杂的学科，但他最主要的工作就是研究如何自动执行一个计算过程，有的工作着眼于如何加速计算，比如各种硬件架构、应用框架以及算法的优化，以及用并行的方式加速运算，有的工作着眼于如何解决还未解决的计算问题，为它们发明新的算法（包括现在最热门的人工智能），h某种程度上来说，计算机可以看作一门应用数学。</p>
 <p>此外，计算机领域还有一些看似与计算过程无关的工作，比如存储、通信和人机交互（包括web前端、移动端设计）等等，但其实这些工作要么是为了计算所服务，要么是为了让计算得到的结果产生更好的价值，这些工作也许可以看作应用计算机（本段有点扯远）。</p>
 <p>前面我们讲过抽象是所有科学学科中共有的研究方法，当然计算机领域的前辈们也提出了多种通用的计算抽象，比如大名鼎鼎的图灵机，以及Post模型、Minsky机器等等；此外，使用编程语言，硬件描述语言（如verlog)，各种自动机，也可以描述相应的各种数字系统。但以上所有的抽象，我们都可以用状态机等价的描述，这也是TLA+选择状态机的理由。</p>
+<p>刻画一个完整的状态机需要给出它的状态，以及当前状态与下一步状态的变化规则，这种状态迁移正是要用我们着重提到的时序逻辑来刻画，它很好地将计算思维中重要的时间维度抽象出来，并将连续的时间抽象成离散。</p>
 <p>不管用人脑还是电脑完成一个计算过程，都需要消耗一定的时间。所以我们所有的计算步骤并不能同时完成，而是要指定它们的先后顺序，也就是状态机中的状态迁移。有的步骤需要其他步骤的输出作为输入，而在复杂的并发系统里，还要考虑进程间的通信等更复杂的因素。</p>
 <p>数学和逻辑领域中并不会特别关心时间的概念，它允许我们量化我们关心的任何变量，并将其作为一个维度加入我们的量化空间中。时间在真实的物理世界中是个连续的量，在真实的计算机计算过程也是一个连续的执行，但是我们在考虑计算抽象的时候，我们只想关心计算的正确性，所以我们只要关心时间逻辑上的先后顺序，而不用关心具体的时间长短。因此，我们将时间抽象成一个离散的执行序列。</p>
 <p>在经典的逻辑中增加一个特殊的离散时间维度，便有了时序逻辑。TLA+中状态机用状态的转移来刻画系统的行为，每种状态用变量的assignment来刻画。我们需要提前定义好我们描述状态所需要的变量，时序作为一个特殊的变量维度不需要我们再去专门维护，他隐藏在了每个状态转移公式之中。</p>
@@ -475,8 +478,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/11/06/causality-3/" rel="next" title="《causality》读书笔记 Ⅲ：使用因果图识别因果效应">
-                <i class="fa fa-chevron-left"></i> 《causality》读书笔记 Ⅲ：使用因果图识别因果效应
+              <a href="/2020/01/16/causality-4/" rel="next" title="causality-4.md">
+                <i class="fa fa-chevron-left"></i> causality-4.md
               </a>
             
           </div>
@@ -484,6 +487,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/23/tla-1/" rel="prev" title="TLA+(1)-Some tiny examples">
+                TLA+(1)-Some tiny examples <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -565,7 +572,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
