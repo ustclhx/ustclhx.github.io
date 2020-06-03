@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="TLA+,分布式系统,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在上一篇文章中，我们用几个简单的例子介绍了TLA+的基本结构和基础语法。接下来我们将要关注如何用TLA+刻画真实的计算系统，首先我们会从稍简单的并发系统开始，在描述这些系统时可能会用到一些新的语法，我们会随时对这些语法进行介绍。 A Asynchronous Interface首先从最简单的异步系统开始，我们考虑如何在两个异步设备之间传输数据：  我们需要将信息送sender发送到receiver">
+<meta name="keywords" content="TLA+,分布式系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TLA+笔记（2）-异步接口和2pc">
+<meta property="og:url" content="http://yoursite.com/2020/04/25/tla-2/index.html">
+<meta property="og:site_name" content="ustclhx&#39;s blog">
+<meta property="og:description" content="在上一篇文章中，我们用几个简单的例子介绍了TLA+的基本结构和基础语法。接下来我们将要关注如何用TLA+刻画真实的计算系统，首先我们会从稍简单的并发系统开始，在描述这些系统时可能会用到一些新的语法，我们会随时对这些语法进行介绍。 A Asynchronous Interface首先从最简单的异步系统开始，我们考虑如何在两个异步设备之间传输数据：  我们需要将信息送sender发送到receiver">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2020/04/25/tla-2/1.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/25/tla-2/2.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/25/tla-2/3.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/25/tla-2/4.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/25/tla-2/5.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/25/tla-2/6.png">
+<meta property="og:image" content="http://yoursite.com/2020/04/25/tla-2/7.png">
+<meta property="og:updated_time" content="2020-06-03T02:42:51.625Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TLA+笔记（2）-异步接口和2pc">
+<meta name="twitter:description" content="在上一篇文章中，我们用几个简单的例子介绍了TLA+的基本结构和基础语法。接下来我们将要关注如何用TLA+刻画真实的计算系统，首先我们会从稍简单的并发系统开始，在描述这些系统时可能会用到一些新的语法，我们会随时对这些语法进行介绍。 A Asynchronous Interface首先从最简单的异步系统开始，我们考虑如何在两个异步设备之间传输数据：  我们需要将信息送sender发送到receiver">
+<meta name="twitter:image" content="http://yoursite.com/2020/04/25/tla-2/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/25/tla-2/">
+
+
+
+
+
+  <title>TLA+笔记（2）-异步接口和2pc | ustclhx's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?bed8b7ef588a5c09a7073424af5f9cdc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ustclhx's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-causality">
+          <a href="/categories/《causality》" rel="section">
+            
+            《causality》
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/25/tla-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ustclhx">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ustclhx's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">TLA+笔记（2）-异步接口和2pc</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-25T22:55:37+08:00">
+                2020-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/分布式系统/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式系统</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TLA/" itemprop="url" rel="index">
+                    <span itemprop="name">TLA+</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/04/25/tla-2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/04/25/tla-2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在上一篇文章中，我们用几个简单的例子介绍了TLA+的基本结构和基础语法。接下来我们将要关注如何用TLA+刻画真实的计算系统，首先我们会从稍简单的并发系统开始，在描述这些系统时可能会用到一些新的语法，我们会随时对这些语法进行介绍。</p>
+<h2 id="A-Asynchronous-Interface"><a href="#A-Asynchronous-Interface" class="headerlink" title="A Asynchronous Interface"></a>A Asynchronous Interface</h2><p>首先从最简单的异步系统开始，我们考虑如何在两个异步设备之间传输数据：</p>
+<p><img src="1.png" alt="1"></p>
+<p>我们需要将信息送sender发送到receiver，数据在val中被传输，rdy和ack则用来同步。sender必须等待上一个数据的acknowledgment（ack)返回后，才能发送下一个数据。一个可能的执行行为示例如下：</p>
+<p><img src="2.png" alt="2"></p>
+<p>可以发现在上图中我们将val和rdy的变化合并在了一个step里，实际上在真实的物理世界里这是不合理的，因为这两个值代表了两个不同物理设备上的电压，它们不可能完全精确的同时变化。但我们之前说过，抽象意味着忽视不重要的细节，我们这样的做法虽然看似与真实世界矛盾，但其实更好的完成了抽象的目标，可以帮助我们更轻松地分析系统的性质。</p>
+<p>抽象的粒度是我们在刻画系统时需要决定的一个重要因素，如果粒度过细，会导致细节过多，失去了抽象的意义，如果过粗，又可能会导致一些错误。TLA+并不能教我们如何做抽象，如何选择出。我们做抽象的时候总希望尽可能简单，在保证反映出系统核心性质的前提下忽略尽可能多的无关细节。</p>
+<h3 id="The-First-Specification"><a href="#The-First-Specification" class="headerlink" title="The First Specification"></a>The First Specification</h3><p>理论上我们描述的异步接口可以传输任意类型的数据，但在实际某个具体的系统中我们传输肯定只能是特定范围的数据集中的数据，比如：32位的数据。</p>
+<p>然而，无论我们想要传输的是32位还是128位的数据，我们的传输协议就相同的，也就是说我们接口构造的本质是不变的。我们既想说明在具体的系统中可传输的数据范围是有限的，又想说明这个数据范围的选择其实是任意的。为此，我们要使用TLA+中的一个重要的关键词CONSTANT来修饰可以传输的数据集：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CONSTANT Data</span><br></pre></td></tr></table></figure>
+
+<p>这意味着我们可以传输的数据将从某个给定的数据集中选取。我们可以用上篇文章中提到的类型不变量说明val必须在Data中选取，同时我们可以说明rdy和ack必须从0和1中选取：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TypeInvariant == /\ val \in Data</span><br><span class="line">              == /\ rdy \in &#123;0,1&#125;</span><br><span class="line">              == /\ ack \in &#123;0,1&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来考虑状态转移公式Next，我们的异步接口一共可能有两种状态的转移，分别是发送一个值和接受一个值，我们将它们分为Send 和 Rcv两个Action分别定义。</p>
+<p>对 Send action，先来考虑它的激活状态，只有当rdy = ack时，我们才知道两个接口是同步的，才被允许发送一个信息，因此rdy = ack 应该是Send的第一条语句。</p>
+<p>剩下的语句将描述Send中状态是如何转移的，首先我们新的传输值可以是Data中的任意数据，$val’ \in Data$, rdy应该选取与前一状态的值不同的另一个值，rdy’ = 1 - rdy，最后我们还要说明ack的值要保持不变，TLA+中定义了UNCHANGED函数帮我们方便的说明一个变量的值需要保持与前一状态相同。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Send == /\ rdy = ack</span><br><span class="line">        /\ val&apos; \in Data</span><br><span class="line">        /\ rdy&apos; = 1- rdy</span><br><span class="line">        /\ UNCHANGED ack</span><br></pre></td></tr></table></figure>
+
+<p>同理，我们也可以轻松写出Rcv的action公式，最后我们给出完整的Spec：</p>
+<p><img src="3.png" alt="3"></p>
+<h3 id="Another-Specifation"><a href="#Another-Specifation" class="headerlink" title="Another Specifation"></a>Another Specifation</h3><p>上一节中我们得到的 Module AcynchInterface 已经是一个对我们给出的异步接口的良好的刻画，但如果我们想在刻画更复杂的系统时利用这个异步接口的Spec的话，我们还需要对这个Spec进行一些优化，使它可以更好的作为复杂系统的一部分。</p>
+<p>首先第一个问题是，第一个Spec中为了刻画一个简单的接口我们使用了三个变量。在复杂的系统中，我们希望用到的变量尽可能少，要避免出现变量数目的膨胀。</p>
+<p>TLA+提供了records将多个有关的变量合并成一个，records类似于编程语言中的struct。我们可以用一个变量 chan 来替换原本的三个变量 val，rdy和ack，像之前一样，我们可以用type invariant 说明chan的类型：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CONSTANT Data</span><br><span class="line">VARIABLE chan</span><br><span class="line">TypeInvariant == chan /in [val : Data, rdy : &#123;0,1&#125;, ack : &#123;0,1&#125;]</span><br></pre></td></tr></table></figure>
+
+<p>chan 有三个fields来分别对应val,rdy,ack三个变量，我们可以通过 chan.val, chan.rdy, chan.ack 的方式来分别引用它们。</p>
+<p>[val : Data, rdy : {0,1}, ack : {0,1}]代表了fields为val,rdy和ack，且val的值是集合Data中的一个元素，rdy和ack的值是{0，1}中一个元素的所有records的集合。</p>
+<p>此外，我们可以用action Send(d)代替原本的Send，这样可以更明确的用d代指我们传输的数据。原本的Next公式可以写作：</p>
+<p>$$Next \triangleq (\exist\ d\ \in\ Data : Send(d)) \vee Rcv $$</p>
+<p>Send(d)的公式可以写作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Send(d) == /\ chan.rdy = chan.ack</span><br><span class="line">           /\ chan&apos; = [val |-&gt; d, rdy |-&gt; 1 - chan.rdy, ack |-&gt; chan.ack]</span><br></pre></td></tr></table></figure>
+
+<p>我们还可以用另一种方式来表达对chan’的赋值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chan&apos; = [chan EXCEPT !.val = d, !.rdy = 1 - @]</span><br></pre></td></tr></table></figure>
+
+<p>上式指代了一个除了val和rdy的值改变，其他fields的值与chan中对应值相等的一个新的record。在!.rdy处出现的@指代了chan.rdy。</p>
+<p>一般来讲，后一种表达方式往往会更多地被选用，因为它往往更加简单。</p>
+<p>同理，我们不难写出新的Rcv的表达式，第二版的Spec如下：</p>
+<p><img src="4.png" alt="4"></p>
+<h2 id="2PC"><a href="#2PC" class="headerlink" title="2PC"></a>2PC</h2><h3 id="事务提交（Traction-Commit"><a href="#事务提交（Traction-Commit" class="headerlink" title="事务提交（Traction Commit)"></a>事务提交（Traction Commit)</h3><p>事务（Traciton)是一个常见的计算机术语，是数据库中对数据进行访问或者更新的一个基本执行单位。事务有ACID四个特性，在这里我们不展开讨论。本节中我们想关心的是，在一个分布式系统中的多节点数据库里，我们如何保证各个节点事务提交的一致性。</p>
+<p><img src="5.png" alt="5"></p>
+<p>在多节点数据库中，事务被各节点中的处理器分别执行，我们称之为RM(Resource Managers)。</p>
+<p>一个事务最终可能被commit也可能被aboart，只有当所有的RM都同意commit时，事务才会被commit，而当任一个RM选择abort时，事务都必须被abort。</p>
+<p><img src="6.png" alt="6"></p>
+<p>一个RM在处理事务时可能有如上四个状态：{working,prepared,commited,aobrted}。只有当一个RM中的处理器完成事务所需要的执行进入准备状态后，才能决定commit一个事务，但工作状态下只要出现错误和意外（比如宕机），随时都可以决定abort一个事务。</p>
+<p>接下来我们考虑如何用TLA+刻画事务提交的过程，这并不是一个复杂的Spec:</p>
+<p>首先我们可以用常量Constant RM 表示所有的节点RMs，我们需要一个变量来记录每个RM的状态，这时就要用到一个新的变量类型function。</p>
+<p>有基本中学数学知识的人并不会对function陌生，它的主要作用是将一个变量映射到另一个。在程序语言中，array和map都可以说是一种function，但不同的是，array的定义域只能是从0开始连续的整数，map的定义域只能是某种相同类型变量的集合，而数学和TLA+中function的定义域可以是任意变量的集合。</p>
+<p>function有关的语法如下：</p>
+<p><img src="7.png" alt="7"></p>
+<p>我们可以定义一个变量rmState来记录所有RM的状态，并用类型不变量说明它必须是将每个RM映射到它对应的状态的函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">VARIABLE rmState  \* rmState[rm] is the state of resource manager rm.</span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">TCTypeOK ==</span><br><span class="line">  rmState \in [RM -&gt; &#123;&quot;working&quot;, &quot;prepared&quot;, &quot;committed&quot;, &quot;aborted&quot;&#125;]</span><br></pre></td></tr></table></figure>
+
+<p>有了变量rmState后，我们就可以进一步定义Init和action语句，action将包括prepare(r)和decide(r)两步，分别代表某个RM r 从working到prepared和prepared到commited/aborted的过程，由于过程并不复杂，这里不再赘述，可以参看后面的完整代码。</p>
+<p>一个Next公式一定是某个RM r执行prepare或者decide的过程，我们可以借助$\exist$符号表示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TCNext == \E r \in RM : Prepare(r) \/ Decide(r)</span><br></pre></td></tr></table></figure>
+
+<p>此外，我们还要定义一个表达一致性的不变量TCConsistent，它可以说明按照我们的Spec，最终得到的系统会满足事务提交的一致性，也就是说不会有两个RM，一个选择commit，一个选择abort:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TCConsistent ==  </span><br><span class="line">\A r1, r2 \in RM : ~ /\ rmState[r1] = &quot;aborted&quot;</span><br><span class="line">                       /\ rmState[r2] = &quot;committed&quot;</span><br></pre></td></tr></table></figure>
+
+<p>下面是一个刻画事务提交过程的完整spec，Lamport贴心地在每个语句后面都给出了注释。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">CONSTANT RM       \* The set of participating resource managers</span><br><span class="line"></span><br><span class="line">VARIABLE rmState  \* rmState[rm] is the state of resource manager rm.</span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">TCTypeOK ==</span><br><span class="line">  (* The type-correctness invariant                                       *)</span><br><span class="line">  rmState \in [RM -&gt; &#123;&quot;working&quot;, &quot;prepared&quot;, &quot;committed&quot;, &quot;aborted&quot;&#125;]</span><br><span class="line"></span><br><span class="line">TCInit ==   rmState = [r \in RM |-&gt; &quot;working&quot;]</span><br><span class="line">  (* The initial predicate.                                               *)</span><br><span class="line"></span><br><span class="line">canCommit == \A r \in RM : rmState[r] \in &#123;&quot;prepared&quot;, &quot;committed&quot;&#125;</span><br><span class="line">  (* True iff all RMs are in the &quot;prepared&quot; or &quot;committed&quot; state.         *)</span><br><span class="line"></span><br><span class="line">notCommitted == \A r \in RM : rmState[r] # &quot;committed&quot; </span><br><span class="line">  (* True iff no resource manager has decided to commit.                   *)</span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">(***************************************************************************)</span><br><span class="line">(* We now define the actions that may be performed by the RMs, and then    *)</span><br><span class="line">(* define the complete next-state action of the specification to be the    *)</span><br><span class="line">(* disjunction of the possible RM actions.                                 *)</span><br><span class="line">(***************************************************************************)</span><br><span class="line">Prepare(r) == /\ rmState[r] = &quot;working&quot;</span><br><span class="line">              /\ rmState&apos; = [rmState EXCEPT ![r] = &quot;prepared&quot;]</span><br><span class="line"></span><br><span class="line">Decide(r)  == \/ /\ rmState[r] = &quot;prepared&quot;</span><br><span class="line">                 /\ canCommit</span><br><span class="line">                 /\ rmState&apos; = [rmState EXCEPT ![r] = &quot;committed&quot;]</span><br><span class="line">              \/ /\ rmState[r] \in &#123;&quot;working&quot;, &quot;prepared&quot;&#125;</span><br><span class="line">                 /\ notCommitted</span><br><span class="line">                 /\ rmState&apos; = [rmState EXCEPT ![r] = &quot;aborted&quot;]</span><br><span class="line"></span><br><span class="line">TCNext == \E r \in RM : Prepare(r) \/ Decide(r)</span><br><span class="line">  (* The next-state action.                                              *)</span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">TCConsistent ==  </span><br><span class="line">  (* A state predicate asserting that two RMs have not arrived at          *)</span><br><span class="line">  (* conflicting decisions.  It is an invariant of the specification.      *)</span><br><span class="line">  \A r1, r2 \in RM : ~ /\ rmState[r1] = &quot;aborted&quot;</span><br><span class="line">                       /\ rmState[r2] = &quot;committed&quot;</span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">(* The following part of the spec is not discussed in Video Lecture 5.  It *)</span><br><span class="line">(* will be explained in Video Lecture 8.                                   *)</span><br><span class="line">TCSpec == TCInit /\ [][TCNext]_rmState</span><br><span class="line">  (* The complete specification of the protocol written as a temporal      *)</span><br><span class="line">  (* formula.                                                              *)</span><br><span class="line"></span><br><span class="line">THEOREM TCSpec =&gt; [](TCTypeOK /\ TCConsistent)</span><br><span class="line">  (*************************************************************************)</span><br><span class="line">  (* This theorem asserts the truth of the temporal formula whose meaning  *)</span><br><span class="line">  (* is that the state predicate TCTypeOK /\ TCInvariant is an invariant   *)</span><br><span class="line">  (* of the specification TCSpec.  Invariance of this conjunction is       *)</span><br><span class="line">  (* equivalent to invariance of both of the formulas TCTypeOK and         *)</span><br><span class="line">  (* TCConsistent.                                                         *)</span><br><span class="line">  (*************************************************************************)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2PC（2-Phase-Commit"><a href="#2PC（2-Phase-Commit" class="headerlink" title="2PC（2 Phase Commit)"></a>2PC（2 Phase Commit)</h3><p>再刻画完事务提交的Spec之后，接下来就要考虑一个能实现事务提交的算法，2阶段提交（2 phase commit)就是一个可以实现事务提交的算法。</p>
+<p>要想实现各节点决策的统一，一个最直接的想法就是找一个中心节点来记录所有节点的状态。2PC采用就是这样的方式，我们将中心节点称为tm(transaction managergu)，每个rm要先后将自己的状态提交给TM两次，因此称之为2PC。</p>
+<p>第一阶段中，tm向各个rm提出一个提议，各个rm进入working状态，在处理完成后rm进入prepared状态并通知tm。</p>
+<p>第二阶段中，tm根据所有rm的反馈，选择提交或者中止事务，如果所有rm全部同意则提交，如果有一个不同意则就要中止。</p>
+<p>如果不考虑节点宕机的情况，2pc可以很好地解决之前定义的事务提交一致性问题。如果要进一步考虑宕机等问题，我们还要设计更复杂的算法，如同样知名的3pc，在本文中我们只考虑较为简单的2pc算法。</p>
+<p>下面我们考虑用TLC来严格地刻画2pc:</p>
+<p>首先考虑需要刻画的变量，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CONSTANT  RM</span><br><span class="line"></span><br><span class="line">VARIABLES rmState,tmState,tmPrePared,msgs</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>像定义TC时一样，我们仍需要定义一个常量表示RM以及记录所有rm状态的变量rmstate。</li>
+<li>由于我们加入了调节节点tm，我们需要定义tmstate变量来记录tm的状态。</li>
+<li>在阶段1的提交中，tm需要记录所有rm节点的工作状态，我们定义tmPrePared变量记录所有处于prepared状态的结点。</li>
+<li>此外，我们还想更明确地刻画rm向tm的信息提交过程，我们定义msgs变量来记录正在传输中的messages。</li>
+</ul>
+<p>在2pc算法中可以被传输的message有两种，阶段1中的prepared信息和阶段2中的commit/abort信息，用TLC语言刻画如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Messages ==</span><br><span class="line"> [type : &#123;&quot;Prepared&quot;&#125;, rm : RM]  \cup  [type : &#123;&quot;Commit&quot;, &quot;Abort&quot;&#125;]</span><br></pre></td></tr></table></figure>
+
+<p>按照惯例，我们用类型不变量TypeOK来说明每个变量的变量类型，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">TPTypeOK ==  </span><br><span class="line">  /\ rmState \in [RM -&gt; &#123;&quot;working&quot;, &quot;prepared&quot;, &quot;committed&quot;, &quot;aborted&quot;&#125;]</span><br><span class="line">  /\ tmState \in &#123;&quot;init&quot;, &quot;done&quot;&#125;</span><br><span class="line">  /\ tmPrepared \subseteq RM</span><br><span class="line">  /\ msgs \subseteq Messages</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>rmstate的类型不变量与在TC中定义的相同，是定义域为RM，值域为四种状态的函数。</li>
+<li>tmstate有”init”和”done”两种可能，代表算法正在执行还是已经完毕。</li>
+<li>tmPrepared是RM的一个子集，代表RM中已经进入准备状态节点。</li>
+<li>msgs是所有可能出现的信息集合Messages的一个子集。</li>
+</ul>
+<p>在算法开始时，所有rm节点应该处于working状态，tm节点应该处于init状态，此时，还没有任何rm节点完成工作，也没有任何消息被传输，因此tmPrepared和msgs都应该为空集：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">TPInit ==</span><br><span class="line">  /\ rmState = [r \in RM |-&gt; &quot;working&quot;]</span><br><span class="line">  /\ tmState = &quot;init&quot;</span><br><span class="line">  /\ tmPrepared   = &#123;&#125;</span><br><span class="line">  /\ msgs = &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来考虑TPNEXT中应该包含的几个状态转移过程，我们需要刻画rm进入准备/中止状态和tm选择提交或者终止的过程，以及所有相关的消息传输和接受的过程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">TPNext ==</span><br><span class="line">  \/ TMCommit \/ TMAbort</span><br><span class="line">  \/ \E r \in RM :</span><br><span class="line">       TMRcvPrepared(r) \/ RMPrepare(r) \/ RMChooseToAbort(r)</span><br><span class="line">         \/ RMRcvCommitMsg(r) \/ RMRcvAbortMsg(r)</span><br></pre></td></tr></table></figure>
+
+<p>读者可以自行尝试刻画这7个状态转移子过程，完成后再与下文的完整spec对照：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line">CONSTANT RM  \* The set of resource managers</span><br><span class="line"></span><br><span class="line">VARIABLES</span><br><span class="line">  rmState,       \* rmState[r] is the state of resource manager r.</span><br><span class="line">  tmState,       \* The state of the transaction manager.</span><br><span class="line">  tmPrepared,    \* The set of RMs from which the TM has received &quot;Prepared&quot;</span><br><span class="line">                 \* messages.</span><br><span class="line">  msgs           </span><br><span class="line">    (***********************************************************************)</span><br><span class="line">    (* In the protocol, processes communicate with one another by sending  *)</span><br><span class="line">    (* messages.  For simplicity, we represent message passing with the    *)</span><br><span class="line">    (* variable msgs whose value is the set of all messages that have been *)</span><br><span class="line">    (* sent.  A message is sent by adding it to the set msgs.  An action   *)</span><br><span class="line">    (* that, in an implementation, would be enabled by the receipt of a    *)</span><br><span class="line">    (* certain message is here enabled by the presence of that message in  *)</span><br><span class="line">    (* msgs.  For simplicity, messages are never removed from msgs.  This  *)</span><br><span class="line">    (* allows a single message to be received by multiple receivers.       *)</span><br><span class="line">    (* Receipt of the same message twice is therefore allowed; but in this *)</span><br><span class="line">    (* particular protocol, that&apos;s not a problem.                          *)</span><br><span class="line">    (***********************************************************************)</span><br><span class="line"></span><br><span class="line">Messages ==</span><br><span class="line">  (* The set of all possible messages.  Messages of type &quot;Prepared&quot; are    *)</span><br><span class="line">  (* sent from the RM indicated by the message&apos;s rm field to the TM.       *)</span><br><span class="line">  (* Messages of type &quot;Commit&quot; and &quot;Abort&quot; are broadcast by the TM, to be  *)</span><br><span class="line">  (* received by all RMs.  The set msgs contains just a single copy of     *)</span><br><span class="line">  (* such a message.                                                       *)</span><br><span class="line">  [type : &#123;&quot;Prepared&quot;&#125;, rm : RM]  \cup  [type : &#123;&quot;Commit&quot;, &quot;Abort&quot;&#125;]</span><br><span class="line"></span><br><span class="line">TPTypeOK ==  </span><br><span class="line">  (* The type-correctness invariant                                        *)</span><br><span class="line">  /\ rmState \in [RM -&gt; &#123;&quot;working&quot;, &quot;prepared&quot;, &quot;committed&quot;, &quot;aborted&quot;&#125;]</span><br><span class="line">  /\ tmState \in &#123;&quot;init&quot;, &quot;done&quot;&#125;</span><br><span class="line">  /\ tmPrepared \subseteq RM</span><br><span class="line">  /\ msgs \subseteq Messages</span><br><span class="line"></span><br><span class="line">TPInit ==</span><br><span class="line">  (* The initial predicate.                                                *)</span><br><span class="line">  /\ rmState = [r \in RM |-&gt; &quot;working&quot;]</span><br><span class="line">  /\ tmState = &quot;init&quot;</span><br><span class="line">  /\ tmPrepared   = &#123;&#125;</span><br><span class="line">  /\ msgs = &#123;&#125;</span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">(* We now define the actions that may be performed by the processes, first *)</span><br><span class="line">(* the TM&apos;s actions, then the RMs&apos; actions.                                *)</span><br><span class="line"></span><br><span class="line">TMRcvPrepared(r) ==</span><br><span class="line">  (* The TM receives a &quot;Prepared&quot; message from resource manager r.  We     *)</span><br><span class="line">  (* could add the additional enabling condition r \notin tmPrepared,      *)</span><br><span class="line">  (* which disables the action if the TM has already received this         *)</span><br><span class="line">  (* message.  But there is no need, because in that case the action has   *)</span><br><span class="line">  (* no effect; it leaves the state unchanged.                             *)</span><br><span class="line">  /\ tmState = &quot;init&quot;</span><br><span class="line">  /\ [type |-&gt; &quot;Prepared&quot;, rm |-&gt; r] \in msgs</span><br><span class="line">  /\ tmPrepared&apos; = tmPrepared \cup &#123;r&#125;</span><br><span class="line">  /\ UNCHANGED &lt;&lt;rmState, tmState, msgs&gt;&gt;</span><br><span class="line"></span><br><span class="line">TMCommit ==</span><br><span class="line">  (* The TM commits the transaction; enabled iff the TM is in its initial  *)</span><br><span class="line">  (* state and every RM has sent a &quot;Prepared&quot; message.                     *)</span><br><span class="line">  /\ tmState = &quot;init&quot;</span><br><span class="line">  /\ tmPrepared = RM</span><br><span class="line">  /\ tmState&apos; = &quot;done&quot;</span><br><span class="line">  /\ msgs&apos; = msgs \cup &#123;[type |-&gt; &quot;Commit&quot;]&#125;</span><br><span class="line">  /\ UNCHANGED &lt;&lt;rmState, tmPrepared&gt;&gt;</span><br><span class="line"></span><br><span class="line">TMAbort ==</span><br><span class="line">  (* The TM spontaneously aborts the transaction.                          *)</span><br><span class="line">  /\ tmState = &quot;init&quot;</span><br><span class="line">  /\ tmState&apos; = &quot;done&quot;</span><br><span class="line">  /\ msgs&apos; = msgs \cup &#123;[type |-&gt; &quot;Abort&quot;]&#125;</span><br><span class="line">  /\ UNCHANGED &lt;&lt;rmState, tmPrepared&gt;&gt;</span><br><span class="line"></span><br><span class="line">RMPrepare(r) ==</span><br><span class="line">  (* Resource manager r prepares.                                          *)</span><br><span class="line">  /\ rmState[r] = &quot;working&quot;</span><br><span class="line">  /\ rmState&apos; = [rmState EXCEPT ![r] = &quot;prepared&quot;]</span><br><span class="line">  /\ msgs&apos; = msgs \cup &#123;[type |-&gt; &quot;Prepared&quot;, rm |-&gt; r]&#125;</span><br><span class="line">  /\ UNCHANGED &lt;&lt;tmState, tmPrepared&gt;&gt;</span><br><span class="line">  </span><br><span class="line">RMChooseToAbort(r) ==</span><br><span class="line">  (* Resource manager r spontaneously decides to abort.  As noted above, r *)</span><br><span class="line">  (* does not send any message in our simplified spec.                     *)</span><br><span class="line">  /\ rmState[r] = &quot;working&quot;</span><br><span class="line">  /\ rmState&apos; = [rmState EXCEPT ![r] = &quot;aborted&quot;]</span><br><span class="line">  /\ UNCHANGED &lt;&lt;tmState, tmPrepared, msgs&gt;&gt;</span><br><span class="line"></span><br><span class="line">RMRcvCommitMsg(r) ==</span><br><span class="line">  (* Resource manager r is told by the TM to commit.                       *)</span><br><span class="line">  /\ [type |-&gt; &quot;Commit&quot;] \in msgs</span><br><span class="line">  /\ rmState&apos; = [rmState EXCEPT ![r] = &quot;committed&quot;]</span><br><span class="line">  /\ UNCHANGED &lt;&lt;tmState, tmPrepared, msgs&gt;&gt;</span><br><span class="line"></span><br><span class="line">RMRcvAbortMsg(r) ==</span><br><span class="line">  (* Resource manager r is told by the TM to abort.                        *)</span><br><span class="line">  /\ [type |-&gt; &quot;Abort&quot;] \in msgs</span><br><span class="line">  /\ rmState&apos; = [rmState EXCEPT ![r] = &quot;aborted&quot;]</span><br><span class="line">  /\ UNCHANGED &lt;&lt;tmState, tmPrepared, msgs&gt;&gt;</span><br><span class="line"></span><br><span class="line">TPNext ==</span><br><span class="line">  \/ TMCommit \/ TMAbort</span><br><span class="line">  \/ \E r \in RM :</span><br><span class="line">       TMRcvPrepared(r) \/ RMPrepare(r) \/ RMChooseToAbort(r)</span><br><span class="line">         \/ RMRcvCommitMsg(r) \/ RMRcvAbortMsg(r)</span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">(* The material below this point is not discussed in Video Lecture 6.  It  *)</span><br><span class="line">(* will be explained in Video Lecture 8.                                   *)</span><br><span class="line"></span><br><span class="line">TPSpec == TPInit /\ [][TPNext]_&lt;&lt;rmState, tmState, tmPrepared, msgs&gt;&gt;</span><br><span class="line">  (* The complete spec of the Two-Phase Commit protocol.                   *)</span><br><span class="line"></span><br><span class="line">THEOREM TPSpec =&gt; []TPTypeOK</span><br><span class="line">  (* This theorem asserts that the type-correctness predicate TPTypeOK is  *)</span><br><span class="line">  (* an invariant of the specification.                                    *)</span><br><span class="line">-----------------------------------------------------------------------------</span><br><span class="line">(* We now assert that the Two-Phase Commit protocol implements the         *)</span><br><span class="line">(* Transaction Commit protocol of module TCommit.  The following statement *)</span><br><span class="line">(* imports all the definitions from module TCommit into the current        *)</span><br><span class="line">(* module.                                                                 *)</span><br><span class="line"></span><br><span class="line">INSTANCE TCommit</span><br><span class="line"></span><br><span class="line">THEOREM TPSpec =&gt; TCSpec</span><br><span class="line">  (* This theorem asserts that the specification TPSpec of the Two-Phase   *)</span><br><span class="line">  (* Commit protocol implements the specification TCSpec of the            *)</span><br><span class="line">  (* Transaction Commit protocol.                                          *)</span><br></pre></td></tr></table></figure>
+
+<p align="right"> (完) </p>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="ustclhx 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="ustclhx 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/TLA/" rel="tag"># TLA+</a>
+          
+            <a href="/tags/分布式系统/" rel="tag"># 分布式系统</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/23/tla-1/" rel="next" title="TLA+笔记(1)-Some tiny examples">
+                <i class="fa fa-chevron-left"></i> TLA+笔记(1)-Some tiny examples
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/1.jpg" alt="ustclhx">
+            
+              <p class="site-author-name" itemprop="name">ustclhx</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#A-Asynchronous-Interface"><span class="nav-number">1.</span> <span class="nav-text">A Asynchronous Interface</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#The-First-Specification"><span class="nav-number">1.1.</span> <span class="nav-text">The First Specification</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Another-Specifation"><span class="nav-number">1.2.</span> <span class="nav-text">Another Specifation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2PC"><span class="nav-number">2.</span> <span class="nav-text">2PC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#事务提交（Traction-Commit"><span class="nav-number">2.1.</span> <span class="nav-text">事务提交（Traction Commit)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2PC（2-Phase-Commit"><span class="nav-number">2.2.</span> <span class="nav-text">2PC（2 Phase Commit)</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ustclhx</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'NXqRCI0vAWGhLaHFjNhjVIqO-gzGzoHsz',
+        appKey: 'Etshjy025hgmSHEcqHoJi4PB',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
