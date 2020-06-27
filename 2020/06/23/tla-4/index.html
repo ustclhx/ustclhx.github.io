@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="TLA+,分布式系统,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本节中我们将关注本系列中用TLA+刻画的最后一个系统，一个真实计算机中的内存系统。 一个内存系统包括一系列处理器，内存本身，以及链接处理器到内存的抽象接口，我们称之为memInt。  The Meomry Interface首先考虑如何刻画MemInt, 在此前刻画异步接口时，我们采用了握手协议，只有在确认前一个值被接受之后，才能发送下一个值。在大多数的内存接口中，我们一般也要采用这样的设计，但在">
+<meta name="keywords" content="TLA+,分布式系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TLA+笔记(4)- A Caching Memory">
+<meta property="og:url" content="http://yoursite.com/2020/06/23/tla-4/index.html">
+<meta property="og:site_name" content="ustclhx&#39;s blog">
+<meta property="og:description" content="本节中我们将关注本系列中用TLA+刻画的最后一个系统，一个真实计算机中的内存系统。 一个内存系统包括一系列处理器，内存本身，以及链接处理器到内存的抽象接口，我们称之为memInt。  The Meomry Interface首先考虑如何刻画MemInt, 在此前刻画异步接口时，我们采用了握手协议，只有在确认前一个值被接受之后，才能发送下一个值。在大多数的内存接口中，我们一般也要采用这样的设计，但在">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2020/06/23/tla-4/1.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/23/tla-4/2.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/23/tla-4/3.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/23/tla-4/4.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/23/tla-4/5.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/23/tla-4/6.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/23/tla-4/7.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/23/tla-4/8.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/23/tla-4/9.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/23/tla-4/10.png">
+<meta property="og:updated_time" content="2020-06-27T04:07:27.871Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TLA+笔记(4)- A Caching Memory">
+<meta name="twitter:description" content="本节中我们将关注本系列中用TLA+刻画的最后一个系统，一个真实计算机中的内存系统。 一个内存系统包括一系列处理器，内存本身，以及链接处理器到内存的抽象接口，我们称之为memInt。  The Meomry Interface首先考虑如何刻画MemInt, 在此前刻画异步接口时，我们采用了握手协议，只有在确认前一个值被接受之后，才能发送下一个值。在大多数的内存接口中，我们一般也要采用这样的设计，但在">
+<meta name="twitter:image" content="http://yoursite.com/2020/06/23/tla-4/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/06/23/tla-4/">
+
+
+
+
+
+  <title>TLA+笔记(4)- A Caching Memory | ustclhx's blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?bed8b7ef588a5c09a7073424af5f9cdc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ustclhx's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-causality">
+          <a href="/categories/《causality》" rel="section">
+            
+            《causality》
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/23/tla-4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ustclhx">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/1.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ustclhx's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">TLA+笔记(4)- A Caching Memory</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-23T17:36:42+08:00">
+                2020-06-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/23/tla-4/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/06/23/tla-4/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本节中我们将关注本系列中用TLA+刻画的最后一个系统，一个真实计算机中的内存系统。</p>
+<p>一个内存系统包括一系列处理器，内存本身，以及链接处理器到内存的抽象接口，我们称之为memInt。</p>
+<p><img src="1.png" alt="1"></p>
+<h2 id="The-Meomry-Interface"><a href="#The-Meomry-Interface" class="headerlink" title="The Meomry Interface"></a>The Meomry Interface</h2><p>首先考虑如何刻画MemInt, 在此前刻画异步接口时，我们采用了握手协议，只有在确认前一个值被接受之后，才能发送下一个值。在大多数的内存接口中，我们一般也要采用这样的设计，但在刻画内存系统时，我们只关心数据在处理器和内存间传递这一个宏观动作，而不关心数据怎样实现的细节，所以我们将类似握手协议这样的细节都抽象掉。</p>
+<p>我们将处理器发送数据到内存的过程称为Send, 内存发送数据到处理器的过程称为Reply。处理器之间不能相互发送数据，内存一次只能给一个处理器发送数据。</p>
+<p>我们将内存接口的状态命名为memInt,每个Send 或者 Replky 步骤的执行都会对memInt产生某种改变。但我们并不想定义这种改变的细节，在不同的内存系统中可以有不同的改变方式。为了支持这种需要，TLA+同样允许我们将运算符定义为常量。</p>
+<p>我们可以如下定义一个带有四个参数的常量操作符：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CONSTANT Send(_,_,_,_)</span><br></pre></td></tr></table></figure>
+
+<p>我们还可以利用ASSUME 语句对Send的性质进行断言：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Assume \A p,d,miOld,miNew : </span><br><span class="line">    Send(p,d,miOld,miNew) \in BOOLEAN</span><br></pre></td></tr></table></figure>
+
+<p>Send运算符代表了处理器p向内存发送值d的过程，该Assume语句断言了Send 表达式的值必定为布尔值，当且仅当初始状态memInt等于第三个参数miOld，且迁移后状态memInt’ 等于第四个参数miNew时，布尔值为真。</p>
+<p>一个MemInt 的模块刻画如下：</p>
+<p><img src="2.png" alt="2"></p>
+<ol>
+<li>使用Send和Reply 运算符可以描述MemInt 状态是如何变化的,此外我们还要声明一个常量参数InitMemInt， 来代表memInt 所有可能取的初始值的集合。</li>
+<li>我们还需要定义三个常数参数，Proc，Adr，Val，分别代表所有处理器的集合，可用内存地址的集合，和某个地址可以存储的值的集合。</li>
+<li>MReq定义了处理器发送给内存的所有可能的请求集合。”op”字段定义了请求的类型，如果为”Rd”，则代表了读请求，读请求除了op字段只包含一个地址字段adr，代表申请读取内存地址adr中的值；op字段如果等于”Wr”，则代表写请求，写请求除了op和adr字段还包含一个val字段，代表申请向adr地址中写入值val。</li>
+<li>显然一个读请求应该用想要读取内存地址中的值响应，而对于写请求，我们希望返回一个与所有读请求可能的返回都不同的值，在模块中我们用NoVal声明了这样一个值。表达式Choose x : F 等于满足表达式F的任意值。</li>
+</ol>
+<h2 id="A-Lineariable-Memory"><a href="#A-Lineariable-Memory" class="headerlink" title="A Lineariable Memory"></a>A Lineariable Memory</h2><p>完成内存接口的刻画后，我们先来考虑刻画一个较为简单的内存系统，一个可线性化的内存系统。</p>
+<p>在一个可线性化的内存系统中，处理器p向内存发送一个请求后，需要等待收到内存的相应后，才可以发送下一个请求。在接收到来自处理器的请求后，内存要通过访问或者修改对应地址的值(我们用变量mem表示这个值)来执行请求，而在发出响应前内存随时也有可能收到来自别的处理器的请求，在可线性化的内存里，我们允许内存在收到请求和返回响应之间的任意时刻对地mem进行访问。</p>
+<p>除了mem外，我们还需要两个变量ctl和buf，其中ctl[p]代表处理器p的状态，buf[p]代表处理器p发送出的请求或者接收到相应。</p>
+<p>以处理器p向地址a中写入值v的请求为例,req : [op |-&gt; “Wr”, add |-&gt; a, val |-&gt; v], 内存处理这个请求要经过如下三个步骤：</p>
+<p><img src="3.png" alt="3"></p>
+<p>其中，Req(p) 代表发出请求，将ctl[p] 状态从”ready” 改为“busy”, Do(p)代表内存访问过程，将ctl[p] 状态从”busy” 改为”done”, Rsp(p)代表接受响应，ctl[p]状态从“done” 回到 “ready”。</p>
+<p>读者可结合MemoryInterface 模块尝试自行对上述步骤用TLA+语言进行刻画，再与Lamport给出的刻画进行对比：</p>
+<p><img src="4.png" alt="4"></p>
+<p><img src="5.png" alt="5"></p>
+<h2 id="More-about-Function"><a href="#More-about-Function" class="headerlink" title="More about Function"></a>More about Function</h2><p>为了后面刻画更复杂的内存系统，本节中将补充介绍一些TLA+中Function 的相关知识。</p>
+<h3 id="元组也是函数"><a href="#元组也是函数" class="headerlink" title="元组也是函数"></a>元组也是函数</h3><p>首先，回顾一下TLA+中的元组，在TLA+中&lt;a,b,c&gt;代表了一个包含元素a,b,c的三元组。其实，元组在本质上也是一个函数，以&lt;a,b,c&gt;为例，它是一个定义域为（1，2，3）的函数，并且将1，2，3依次映射到a, b, c, 因此我们可以把函数的语法代入元组：&lt;a,b,c&gt;[2] = b 。</p>
+<p>TLA+ 提供笛卡尔积运算符×, 假设 $a \in A, b \in B, c \in C$, 我们可以得到A x B x C 为包含所有三元组 &lt;a,b,c&gt; 的集合。</p>
+<p>利用模块Sequence 可以把有限序列定义为元组，长度为n的序列其实就是一个定义域从1到n的函数，我们可以用函数的语法定义Sequence的运算符：</p>
+<p><img src="6.png" alt="6"></p>
+<h3 id="递归函数"><a href="#递归函数" class="headerlink" title="递归函数"></a>递归函数</h3><p>刻画更复杂的内存系统还需要用到递归函数，递归函数在程序语言中是一个非常常用的工具，下面我们来讨论如何在TLA+中定于递归函数。</p>
+<p>以经典的阶乘函数为例，回忆TLA+的函数表示法，我们可能会给出如下一个定义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fact == [n \in Nat |-&gt; IF n = 0 THEN 1 ELSE n*fact[n-1]]</span><br></pre></td></tr></table></figure>
+
+<p>但上述定义在TLA+中是不合法的，因为右边的fact并未定义就被使用。在TLA+中要使用循环定义的方式定义递归函数，一个合法的定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fact[n \in Nat] == IF n = 0 THEN 1 ELSE n*fact[n-1]</span><br></pre></td></tr></table></figure>
+
+<p>通常，定义域为S的递归函数f 都要用f[x \in S] == e 的形式来定义。</p>
+<p>类似地，我们可以定义一个有多个参数的递归函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Acker[m, n \in Nat] ==</span><br><span class="line">    IF m = 0 THEN n + 1</span><br><span class="line">        ELSE IF  n = 0 THEN Acker[m -1, 0]</span><br><span class="line">            ELSE Acker[m - 1; Acker[m; n - 1]]</span><br></pre></td></tr></table></figure>
+
+<h2 id="A-Write-Through-Cache"><a href="#A-Write-Through-Cache" class="headerlink" title="A Write-Through Cache"></a>A Write-Through Cache</h2><p>接下来我们将定义一个简单的Write-Through 缓存，它的系统架构可参考下图:</p>
+<p><img src="7.png" alt="7"></p>
+<p>如图所示，每个处理器p与一个本地控制器相互通信，每个控制器维护三个状态组件:buf[p], ctl[p] 和 cache[p]。cache[p]代表处理器p的缓存，buf[p]和ctl[p]与InternalMemory中的同名变量有相同的意义。控制器与主i存wmem相互通信，处理器到主存的请求都会进入队列memQ, 其队列长度为QLen。</p>
+<p>我们先来考虑在Write-Through 缓存中所有可能的状态转移动作。</p>
+<p>Write-Through缓存意味着每个写请求再向内存写入时同时会更新主存，因此，写请求DoWr(p)在向cache[p]中写入值时，同时也会将写请求加入memQ的尾部。当该请求到达memQ的头部时，会调用MemQWr动作将值存储到wmem之中，同时，如果有其他处理器q存有该写请求要更新地址的内存副本，DoWr(p)同样也会为其更新cache(q)。</p>
+<p>再考虑读请求DoRd(p),它会先在cache[p]中寻找有无需要的值，如果没有，再向主存发送请求，调用动作RdMiss(p)将读请求发送到memQ的尾部，并将ctl[p]的值设置为”waiting”,当RdMiss(p)达到队列头部时，再将读取到的值加入cache[p]。</p>
+<p>如果让MemRd 直接从wmem中取值，但Qmem队列中位于该读请求之后有指向相同地址的写请求，则可能导致两个处理器的缓存中对同一地址写有不同的值。因此，应该先检查Qmem队列，如果存在对相同地址的写入请求，则返回队列中最后一个对该地址的返回值，如果没有再从wmem中读取值。</p>
+<p>下面考虑从处理器p中清楚某个地址的缓存的过程Evict(p), 由于Write- Through 缓存中在向cache中写入值的同时也会写入主存，因此我们可以直接从缓存中删除某个值，除非该值是刚刚从主存读入内存的，还有想要读取该地址中值的读请求DoRd(p)没有执行完毕。</p>
+<p>处理器p向内存发送请求和内存向处理器发送请求的过程Req(p)和Rsp(p)还与前文中的相同，除了还要额外保持新增的变量cache和memQ不变。</p>
+<p>再来确定所需要的变量的形式，由于涉及到的变量较多，形式较为简单的变量就不再赘述，只阐述两个形式稍显复杂的变量。我们令memQ为形式为&lt;p,req&gt;的队列，其中p为处理器的表示，req为处理器p发出的请求，而变量cache应为一个二维函数，对任意处理器p和内存a，cache[p][a]代表地址a在处理器p中的缓存，如果地址a在p中没有保存副本，则cache[p][a] = NoVal 。</p>
+<p>WtiteThroughCache的完整刻画如下：</p>
+<p><img src="8.png" alt="8"></p>
+<p><img src="9.png" alt="9"></p>
+<p><img src="10.png" alt="10"></p>
+<p>WriteThroughCache是本系列展示的最复杂的一个系统，可以看到它的刻画也比我们之前见到的相对长出许多，最后我们再过一遍这个刻画，解释一些重点和之前没出现过的符号。</p>
+<ol>
+<li>开头的Extends,Assume 和变量声明语句应该已经非常熟悉，就不再赘述，Init和Invariant 语句前面也定义过多次，这次出现的一些具体细节也留给读者自己思考。</li>
+<li>Coherence 代表缓存的一致性属性，当且仅当，对记录有任意相同的地址a副本的两个处理器p和q, 它们持有的副本都相同时，Coherence才为真。</li>
+<li>Dowr 语句中引入了Let/In 语法，Let 子句中包含一系列的定义，它们的定义域范围一直延伸到In语句结束。Let/In 语句的作用是用一些简单的变量代替复杂的表达式，来方便书写和阅读，而且不需要影响整个规约中的名字空间。</li>
+<li>vmem是为了MemQRd 动作而定义的，它等价于执行完队列中所有后续写操作的wmem，它是通过我们上一节中描述的递归函数来定义的。有了vmem后,在MemQRd中就可以直接读取vmem 中的值作为新的缓存。</li>
+<li>第一个定理中，除了往常都有的TypeInvariant，还合取了一个Coherence，这意味我们刻画的系统规约还可以始终保证缓存的一致性。要证明这个事实并不是那么容易，而且我们的主要目标是学习如何刻画系统，而不是设计或验证，所有这里并不会讲述要如何证明。</li>
+<li>第二个定理宣称的是满足Write-Through 规约刻画的每一个行为，都同样也满足可线性化内存的规约，其中LM!Spec 代表了模块LM中的公式Spec。换句话说，它宣称了Write-Through内存的设计方式实现(implements）了可线性化内存的需求。implement的证明从数学层面来说并不困难，只需要找到合适的变量替换即可，具体的证明过程可参考《Specifyiung Systems》5.8节 。</li>
+</ol>
+<p align="right"> (完) </p>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="ustclhx 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="ustclhx 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/TLA/" rel="tag"># TLA+</a>
+          
+            <a href="/tags/分布式系统/" rel="tag"># 分布式系统</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/17/tla-3/" rel="next" title="TLA+笔记（3）-FIFO">
+                <i class="fa fa-chevron-left"></i> TLA+笔记（3）-FIFO
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/1.jpg" alt="ustclhx">
+            
+              <p class="site-author-name" itemprop="name">ustclhx</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Meomry-Interface"><span class="nav-number">1.</span> <span class="nav-text">The Meomry Interface</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A-Lineariable-Memory"><span class="nav-number">2.</span> <span class="nav-text">A Lineariable Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#More-about-Function"><span class="nav-number">3.</span> <span class="nav-text">More about Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#元组也是函数"><span class="nav-number">3.1.</span> <span class="nav-text">元组也是函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#递归函数"><span class="nav-number">3.2.</span> <span class="nav-text">递归函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A-Write-Through-Cache"><span class="nav-number">4.</span> <span class="nav-text">A Write-Through Cache</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ustclhx</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'NXqRCI0vAWGhLaHFjNhjVIqO-gzGzoHsz',
+        appKey: 'Etshjy025hgmSHEcqHoJi4PB',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
