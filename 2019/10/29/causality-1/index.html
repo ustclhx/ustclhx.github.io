@@ -92,7 +92,7 @@
 <meta property="og:image" content="http://yoursite.com/2019/10/29/causality-1/3.png">
 <meta property="og:image" content="http://yoursite.com/2019/10/29/causality-1/4.png">
 <meta property="og:image" content="http://yoursite.com/2019/10/29/causality-1/5.png">
-<meta property="og:updated_time" content="2019-11-04T11:52:48.539Z">
+<meta property="og:updated_time" content="2020-12-06T10:40:21.659Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《causality》读书笔记 Ⅰ：概率、图和因果模型">
 <meta name="twitter:description" content="概要本文对应于《causality》中的第一章，本章在正式进入因果世界之前，介绍了一些必要的基础知识，包括理解本书所需要的所有概率论背景和图形符号，以及在Pearl提出结构因果模型（SCM,structual casual model)前图模型和因果模型的发展。本章对因果推理领域的基本范式和基本问题进行了定义，而这些问题会在之后的章节中一一被解答。 概率论知识简介只要理工科专业本科毕业、学习过概率">
@@ -410,7 +410,7 @@
 <p>如前文所述，我们可以把上图的联合概率分解为$P(x_1, x_, x_3, x_4, x_5) = P(x_1)P(x_2|x_1)P(x_3|x_1)P(x_4| x_2, x_3)P(x_5|x_4)$。</p>
 <p>如果一个概率分布P满足一个DAG G中的所有分解，那么我们就可以用G来表示P,称P和G兼容，或者说两者Markov 相关。</p>
 <p>一个验证兼容性的简单方法是列出G要求的所有条件独立性验证它们在P中都有所满足。这些条件独立性可以通过一种称之为有向分离(d-separation)的方法从DAG中得到。</p>
-<h3 id="d-separation"><a href="#d-separation" class="headerlink" title="d-separation"></a>d-separation</h3><p>考虑三个不相交的变量集合X、Y、Z, 它们在DAG中用对应的结点集合表示，如果我们想要知道在给定Z的情况下，X和Y是否独立，那我们就熬检测在DAG中Z能否“封锁”住从X到Y的路径。</p>
+<h3 id="d-separation"><a href="#d-separation" class="headerlink" title="d-separation"></a>d-separation</h3><p>考虑三个不相交的变量集合X、Y、Z, 它们在DAG中用对应的结点集合表示，如果我们想要知道在给定Z的情况下，X和Y是否独立，那我们就要检测在DAG中Z能否“封锁”住从X到Y的路径。</p>
 <p>在后文中，我们将用$(X\perp Y|Z)$代表X和Y关于Z独立，即<br>$$(X\perp Y|Z),  iff P(x|y,z)=p(x|z)$$</p>
 <p>考虑只有三个结点和两条边的最简单结构，那么有如下三种情况：</p>
 <p><strong>1.</strong>$X\rightarrow Y \rightarrow Z$<strong>,称之为“chain”,或”mediation”,可以将Y看作中介，将X的作用传递到Z，此时有</strong>$(X\not\perp Z),(X\perp Z|Y)$.</p>

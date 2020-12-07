@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="因果推理,AI,">
 
 
 
@@ -79,13 +79,27 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="ustclhx&#39;s blog">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+<meta name="description" content="前言因果关系是什么？为什么我们要用因果思维分析问题？又如何分析一个因果关系？ 这些问题看起来好像并不难回答，从刚刚接触这个世界开始，我们就习惯了因果的思维，在拥有基本常识的情况下，我们可以轻松地判断简单的因果，比如公鸡打鸣并不能导致太阳升起，而是后者决定了前者。但其实，人类长久以来都缺乏对因果问题的一个严格地、数学化的定义。 一方面，这个问题曾吸引了哲学家们的热烈关注和讨论，但并没有得到一个令人满">
+<meta name="keywords" content="因果推理,AI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【综述随笔】Judea Pearl 和因果推理">
+<meta property="og:url" content="http://yoursite.com/2019/10/25/因果推理/index.html">
 <meta property="og:site_name" content="ustclhx&#39;s blog">
+<meta property="og:description" content="前言因果关系是什么？为什么我们要用因果思维分析问题？又如何分析一个因果关系？ 这些问题看起来好像并不难回答，从刚刚接触这个世界开始，我们就习惯了因果的思维，在拥有基本常识的情况下，我们可以轻松地判断简单的因果，比如公鸡打鸣并不能导致太阳升起，而是后者决定了前者。但其实，人类长久以来都缺乏对因果问题的一个严格地、数学化的定义。 一方面，这个问题曾吸引了哲学家们的热烈关注和讨论，但并没有得到一个令人满">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2019/10/25/因果推理/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/25/因果推理/2.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/25/因果推理/3.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/25/因果推理/4.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/25/因果推理/5.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/25/因果推理/6.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/25/因果推理/7.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/25/因果推理/8.png">
+<meta property="og:updated_time" content="2020-12-07T14:02:40.341Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ustclhx&#39;s blog">
+<meta name="twitter:title" content="【综述随笔】Judea Pearl 和因果推理">
+<meta name="twitter:description" content="前言因果关系是什么？为什么我们要用因果思维分析问题？又如何分析一个因果关系？ 这些问题看起来好像并不难回答，从刚刚接触这个世界开始，我们就习惯了因果的思维，在拥有基本常识的情况下，我们可以轻松地判断简单的因果，比如公鸡打鸣并不能导致太阳升起，而是后者决定了前者。但其实，人类长久以来都缺乏对因果问题的一个严格地、数学化的定义。 一方面，这个问题曾吸引了哲学家们的热烈关注和讨论，但并没有得到一个令人满">
+<meta name="twitter:image" content="http://yoursite.com/2019/10/25/因果推理/1.png">
 
 
 
@@ -115,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/page/2/">
+  <link rel="canonical" href="http://yoursite.com/2019/10/25/因果推理/">
 
 
 
 
 
-  <title>ustclhx's blog</title>
+  <title>【综述随笔】Judea Pearl 和因果推理 | ustclhx's blog</title>
   
 
 
@@ -150,8 +164,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -252,10 +265,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-       
-            
 
   
 
@@ -285,9 +297,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/10/25/因果推理/" itemprop="url">【综述随笔】Judea Pearl 和因果推理</a></h1>
+          <h1 class="post-title" itemprop="name headline">【综述随笔】Judea Pearl 和因果推理</h1>
         
 
         <div class="post-meta">
@@ -369,9 +379,7 @@
       
 
       
-        
-          
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因果关系是什么？为什么我们要用因果思维分析问题？又如何分析一个因果关系？</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因果关系是什么？为什么我们要用因果思维分析问题？又如何分析一个因果关系？</p>
 <p>这些问题看起来好像并不难回答，从刚刚接触这个世界开始，我们就习惯了因果的思维，在拥有基本常识的情况下，我们可以轻松地判断简单的因果，比如公鸡打鸣并不能导致太阳升起，而是后者决定了前者。但其实，人类长久以来都缺乏对因果问题的一个严格地、数学化的定义。</p>
 <p>一方面，这个问题曾吸引了哲学家们的热烈关注和讨论，但并没有得到一个令人满意的结果，比如代表性的大卫·休谟认为因果是”constant conjunction”（如果A总是在B之前发生，那么A就是B的原因），但以闪电和雷声为例，我们会发现它们只是同一个原因带来的两个结果。还有很多哲学家站在了认知论的立场上，认为因果是不可还原的，归纳不能得出因果，比如大名鼎鼎的农场主悖论，而忽略因果作为客观规律的存在，给因果蒙上了一层形而上学的神秘面纱。</p>
 <p>另一方面，随着近年来统计学和以深度学习为代表的大数据科学的兴起，人们沉迷于对数据中相关性的研究，而逐渐遗忘了因果关系的重要性。虽然统计学家们明白相关性不等于因果性，但仅仅依靠统计学和机器学习取得的伟大成就使他们有意或无意地忽视了对因果性的深入分析。直到近年来，对深度学习不可解释性的抨击才让因果关系这个词开始被主流学界重视。</p>
@@ -549,8 +557,6 @@
 <li>[4] <a href="https://www.bradyneal.com/causal-inference-course#course-textbook" target="_blank" rel="noopener">Introduction to Causal Inference - Brady Neal</a></li>
 </ul>
 
-          
-        
       
     </div>
     
@@ -560,19 +566,76 @@
     
 
     
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>Donate comment here</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="ustclhx 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="ustclhx 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
 
     
 
     <footer class="post-footer">
       
-
+        <div class="post-tags">
+          
+            <a href="/tags/因果推理/" rel="tag"># 因果推理</a>
+          
+            <a href="/tags/AI/" rel="tag"># AI</a>
+          
+        </div>
       
 
       
+      
+      
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/08/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/28/causality-0/" rel="prev" title="《causality》读书笔记 序">
+                《causality》读书笔记 序 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
       
-        <div class="post-eof"></div>
+
+      
       
     </footer>
   </div>
@@ -582,17 +645,11 @@
   </article>
 
 
-        
-    
-       
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -600,6 +657,13 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
         </div>
         
@@ -620,8 +684,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -683,6 +756,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从相关到因果"><span class="nav-number">2.</span> <span class="nav-text">从相关到因果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#根本差异：应对变化"><span class="nav-number">2.1.</span> <span class="nav-text">根本差异：应对变化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#未检验假设和表达因果的新符号"><span class="nav-number">2.2.</span> <span class="nav-text">未检验假设和表达因果的新符号</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Potential-Outcome-框架"><span class="nav-number">3.</span> <span class="nav-text">Potential Outcome 框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#目标：Average-Treatment-Effect"><span class="nav-number">3.1.</span> <span class="nav-text">目标：Average Treatment Effect</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可识别性与“可忽略性”假设"><span class="nav-number">3.2.</span> <span class="nav-text">可识别性与“可忽略性”假设</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结构因果模型"><span class="nav-number">4.</span> <span class="nav-text">结构因果模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#因果方程和因果图"><span class="nav-number">4.1.</span> <span class="nav-text">因果方程和因果图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的表达"><span class="nav-number">4.2.</span> <span class="nav-text">介入的表达</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介入的识别"><span class="nav-number">4.3.</span> <span class="nav-text">介入的识别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理不可观测的混杂变量"><span class="nav-number">4.4.</span> <span class="nav-text">处理不可观测的混杂变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Back-door-Criterion"><span class="nav-number">4.4.1.</span> <span class="nav-text">Back-door Criterion</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Front-door-Criterion"><span class="nav-number">4.4.2.</span> <span class="nav-text">Front-door Criterion</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#混杂的一般性控制和-Do-calculus"><span class="nav-number">4.4.3.</span> <span class="nav-text">混杂的一般性控制和 Do-calculus</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#随机试验"><span class="nav-number">4.5.</span> <span class="nav-text">随机试验</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从识别到估计"><span class="nav-number">5.</span> <span class="nav-text">从识别到估计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#COM-和-GCOM"><span class="nav-number">5.1.</span> <span class="nav-text">COM 和 GCOM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#倾向得分"><span class="nav-number">5.2.</span> <span class="nav-text">倾向得分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#因果推理引擎"><span class="nav-number">6.</span> <span class="nav-text">因果推理引擎</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">7.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -823,6 +912,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
